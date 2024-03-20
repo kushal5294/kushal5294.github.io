@@ -64,7 +64,7 @@ const ProjectList = () => (
         }
       />
       <Project
-        name="Insta485"
+        name="Instagram Clone"
         description="Client side dynamic project that emulates the functionality of Instagram. User-friendly interface that uses React framework that makes AJAX calls to our REST API. Leveraged a Flask application within a Python virtual environment to manage backend operations, including website data, user sessions, and cookies."
         link="/"
         img={{ src: "/assets/images/instagram.png", alt: "instagram logo" }}
