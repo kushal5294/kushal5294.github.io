@@ -38,7 +38,7 @@ const Navbar = () => (
           LinkedIn
         </NavMenuItem>
         <NavMenuItem
-          href="/assets/images/Kushal_Pfatel_Resume.pdf"
+          href="/assets/images/Kushal_Patel_Resume.pdf"
           target="_blank"
         >
           Resume
