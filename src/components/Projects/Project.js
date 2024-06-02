@@ -32,7 +32,12 @@ function Project({ project }) {
         <div className="links-container">
           {project.link1 !== "" ? (
             <>
-              <a className="link-button" href={project.link1}>
+              <a
+                className="link-button"
+                href={project.link1}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {project.link1_button}
               </a>
             </>
@@ -46,7 +51,12 @@ function Project({ project }) {
           ) : null}
           {project.link3 !== "" ? (
             <>
-              <a className="link-button" href={project.link3}>
+              <a
+                className="link-button"
+                href={project.link3}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 {project.link3_button}
               </a>
             </>
@@ -90,7 +100,12 @@ function Project({ project }) {
           <div className="links-container">
             {project.link1 !== "" ? (
               <>
-                <a className="link-button" href={project.link1}>
+                <a
+                  className="link-button"
+                  href={project.link1}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {project.link1_button}
                 </a>
               </>
@@ -104,7 +119,12 @@ function Project({ project }) {
             ) : null}
             {project.link3 !== "" ? (
               <>
-                <a className="link-button" href={project.link3}>
+                <a
+                  className="link-button"
+                  href={project.link3}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   {project.link3_button}
                 </a>
               </>
