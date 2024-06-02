@@ -1,0 +1,37 @@
+@import url('../../index.css');
+.header {
+  display: flex;
+  align-items: center;
+  justify-content:space-around;
+  padding: 20px;
+  border-radius: 10px;
+  font-size: 40px;
+}
+
+.header-content {
+  text-align: left;
+  font-size: 20px;
+}
+
+.name {
+  color: var(--primary-color);
+}
+
+.profile-pic {
+  height: 100%;
+  width: 300px;
+}
+@media screen and (max-width: 767px) {
+  .header {
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+    .header-content {
+      text-align: center;
+    }
+  .profile-pic{
+    margin-top: 20px;
+  }
+
+}

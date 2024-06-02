@@ -1,0 +1,157 @@
+@import url('../../src/index.css');
+* {
+margin: 0;
+padding: 0;
+}
+
+body {
+  background-color: #1c1e21;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.final-results {
+  text-align: center;
+  margin: 40px 0;
+  padding: 10px;
+  color: #ffffff;
+  font-size: 2rem;
+}
+
+.results-numbers {
+  color: #1abced;
+}
+
+footer {
+  margin: 10px;
+  padding-bottom: 20px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #1abced;
+  text-align: center;
+}
+
+table {
+  width: 60%;
+  margin: 20px auto;
+  padding: 20px;
+  border-collapse: collapse;
+    font-family: "Trebuchet MS", sans-serif;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.win {
+  background-color: #d1e7dd;
+}
+
+th {
+  background-color: #1abced;
+  color: #10142c;
+}
+
+.lose {
+  background-color: #e7d1d1;
+}
+
+.win-lose {
+  width: 16px;
+  height: 16px;
+}
+
+
+
+.home-icon {
+  flex: 0 0 auto;
+  padding-top: 30px;
+  
+}
+
+.header-text {
+  margin-top: 20px;
+  font-size: 2em;
+  font-weight: bold;
+  color: #1abced;
+  font-family: "Trebuchet MS", sans-serif;
+  text-align: center;
+  flex-grow: 1;
+}
+.disclaimer {
+  margin: 5px;
+  padding-bottom: 2px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #f2f2f2;
+  text-align: center;
+  display: none;
+}
+.video-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.video-container iframe {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+
+header {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  max-width: 626px;
+  margin: 0 auto;
+}
+@media (max-width: 767px) {
+.disclaimer{
+  display: block;
+}
+  .want {
+    display: none;
+  }
+    .home-icon {
+      
+      padding-left: 30px;
+  
+    }
+}
+.video-container {
+  padding-top: 140px;
+}
+
+@media (min-width: 1025px) {
+header{
+  max-width: 800px;
+}
+.header-text {
+  margin-right: 55px;
+  
+}
+.video-container{
+    margin-top: -65px;
+}
+  
+}
