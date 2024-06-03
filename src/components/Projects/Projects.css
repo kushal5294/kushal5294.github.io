@@ -1,28 +1,39 @@
 @import url('../../index.css');
+
 .projects {
   padding: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
   flex-direction: column;
+  flex-grow: 1;
 }
 
 
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  margin: 0 auto;
-  overflow-y: scroll;
-  overflow-wrap: normal;
+  width: 100%;
+  max-width: 1200px;
+  margin: 30px auto 0 auto;
 }
 .highlight {
 color: var(--primary-color);
-  
+}
+
+.toggle {
+  background-color: transparent;
+  color: var(--primary-color);
+  font-size: 18px;
+  border: 2px solid var(--primary-color);
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: border-color 0.3s;
+  display: none;
 }
 @media screen and (max-width: 992px) {
   .projects-grid {
@@ -32,6 +43,9 @@ color: var(--primary-color);
 @media screen and (max-width: 640px) {
   .projects-grid {
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    .toggle {
+       display: block;
     }
 
 }

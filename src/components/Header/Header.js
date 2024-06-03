@@ -7,11 +7,12 @@ function Header() {
     <header className="header">
       <div className="header-content">
         <h1>
-          Hi there, I'm <span className="name">Kushal</span> 👋
+          Hi there, I'm <span className="highlight">Kushal</span>{" "}
+          <span className="gentle-hover-shake">👋</span>
         </h1>
         <p>
-          <span className="name">Junior</span> studying computer science at{" "}
-          <span className="name">The University of Michigan</span>
+          <span className="highlight">Junior</span> studying computer science at{" "}
+          <span className="highlight">The University of Michigan</span>
         </p>
       </div>
       <img

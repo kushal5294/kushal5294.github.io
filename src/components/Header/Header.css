@@ -1,4 +1,25 @@
 @import url('../../index.css');
+@keyframes tilt-shaking {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(5deg);
+  }
+
+  50% {
+    transform: rotate(0eg);
+  }
+
+  75% {
+    transform: rotate(-5deg);
+  }
+
+  100% {
+    transform: rotate(0deg);
+  }
+}
 .header {
   display: flex;
   align-items: center;
@@ -12,8 +33,13 @@
   text-align: left;
   font-size: 20px;
 }
-
-.name {
+span.gentle-hover-shake {
+  display: inline-block;
+}
+span.gentle-hover-shake:hover {
+  animation: tilt-shaking 0.25s infinite;
+}
+.highlight {
   color: var(--primary-color);
 }
 

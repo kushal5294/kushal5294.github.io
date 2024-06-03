@@ -29,38 +29,31 @@ function Project({ project }) {
   function renderFace() {
     if (mobileDevice) {
       return (
-        <div className="links-container">
-          {project.link1 !== "" ? (
-            <>
-              <a
-                className="link-button"
-                href={project.link1}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {project.link1_button}
-              </a>
-            </>
-          ) : null}
-          {project.link2 !== "" ? (
-            <>
-              <a className="link-button" href={project.link2}>
-                {project.link2_button}
-              </a>
-            </>
-          ) : null}
-          {project.link3 !== "" ? (
-            <>
-              <a
-                className="link-button"
-                href={project.link3}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {project.link3_button}
-              </a>
-            </>
-          ) : null}
+        <div>
+          <div className="concise-container">
+            <p dangerouslySetInnerHTML={{ __html: project.concise }}></p>
+          </div>
+          <div className="links-container">
+            {project.link1 !== "" ? (
+              <>
+                <a
+                  className="mobile-link-button"
+                  href={project.link1}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {project.link1_button}
+                </a>
+              </>
+            ) : null}
+            {project.link2 !== "" ? (
+              <>
+                <a className="mobile-link-button" href={project.link2}>
+                  {project.link2_button}
+                </a>
+              </>
+            ) : null}
+          </div>
         </div>
       );
     } else {
