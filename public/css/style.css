@@ -22,7 +22,7 @@ body {
 }
 
 .results-numbers {
-  color: #1abced;
+  color: #61dafb;
 }
 
 footer {
@@ -30,7 +30,7 @@ footer {
   padding-bottom: 20px;
   font-size: 1.2em;
   font-weight: bold;
-  color: #1abced;
+  color: #61dafb;
   text-align: center;
 }
 
@@ -63,7 +63,7 @@ th {
 }
 
 th {
-  background-color: #1abced;
+  background-color: #61dafb;
   color: #10142c;
 }
 
@@ -85,10 +85,10 @@ th {
 }
 
 .header-text {
-  margin-top: 27px;
+  margin-top: 30px;
   font-size: 2em;
   font-weight: bold;
-  color: #1abced;
+  color: #61dafb;
   font-family: "Trebuchet MS", sans-serif;
   text-align: center;
   flex-grow: 1;
