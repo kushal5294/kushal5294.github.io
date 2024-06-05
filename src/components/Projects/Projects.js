@@ -63,7 +63,7 @@ const projects = [
       "<ul><li>Automatically generates alt text for images in Wordpress</li><li>Regeneration feature that accepts user feedback to improve all text</li></ul>",
     tags: ["PHP", "JavaScript", "AI", "Accessibility", "Wordpress"],
     icon: Alt,
-    icon_size: "100px",
+    icon_size: "75px",
     link1: "",
     link1_button: "",
     link2: "",
