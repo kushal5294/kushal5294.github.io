@@ -12,9 +12,9 @@ import { useState, useEffect } from "react";
 const projects = [
   {
     title: "NFL Spread Algorithm",
-    concise: "ML model that won +23 units in the 2023 NFL season",
+    concise: "ML model that won +25 units in the 2023 NFL season",
     description:
-      "<ul><li>Neural network regression model that predicts the score differential of future NFL matches</li><li>Finished +23 units during the 2023-2024 NFL season against the DraftKings sportsbook</li></ul>",
+      "<ul><li>Neural network regression model that predicts the score differential of future NFL matches</li><li>Finished +25 units during the 2023-2024 NFL season against the DraftKings sportsbook</li></ul>",
     tags: ["Python", "TensorFlow", "Selenium", "Pandas", "ML"],
     icon: Football,
     icon_size: "110px",
@@ -31,7 +31,7 @@ const projects = [
     concise:
       "Scalable platform that returns the most relevant results from over 2,936 Wikepedia pages",
     description:
-      "Full-stack application featuring:<ul> <li>MapReduce pipeline that constructs an inverted index of Wikipedia pages</li><li>Flask-based REST API for search queries</li><li>React front-end UI</li></ul>",
+      "Full-stack application featuring:<ul> <li>MapReduce pipeline that constructs an inverted index of 2,936 Wikipedia pages</li><li>Flask-based REST API for search queries</li><li>React front-end UI</li></ul>",
     tags: ["React", "Python", "Hadoop", "Flask", "SQLite", "AWS"],
     icon: Search_Engine,
     icon_size: "80px",
