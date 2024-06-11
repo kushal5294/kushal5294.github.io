@@ -93,33 +93,36 @@ function Project({ project }) {
           <div className="links-container">
             {project.link1 !== "" ? (
               <>
-                <a
-                  className="link-button"
-                  href={project.link1}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  className="btn"
+                  onClick={() =>
+                    window.open(project.link1, "_blank", "noopener noreferrer")
+                  }
                 >
                   {project.link1_button}
-                </a>
+                </button>
               </>
             ) : null}
             {project.link2 !== "" ? (
               <>
-                <a className="link-button" href={project.link2}>
+                <button
+                  className="btn"
+                  onClick={() => window.open(project.link2)}
+                >
                   {project.link2_button}
-                </a>
+                </button>
               </>
             ) : null}
             {project.link3 !== "" ? (
               <>
-                <a
-                  className="link-button"
-                  href={project.link3}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  className="btn"
+                  onClick={() =>
+                    window.open(project.link3, "_blank", "noopener noreferrer")
+                  }
                 >
                   {project.link3_button}
-                </a>
+                </button>
               </>
             ) : null}
           </div>
