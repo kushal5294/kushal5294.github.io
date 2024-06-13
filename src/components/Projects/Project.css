@@ -99,25 +99,14 @@ li {
   border-radius: 10px;
 }
 
-/* glow */
 .btn::before {
   content: "";
   background: linear-gradient(45deg,
-      #61dafb,
-        #67d2fa,
-        #6dc9f9,
-        #73c1f8,
-        #79b8f7,
-        #7facf6,
-        #85a4f5,
-        #767777,
-        #85a4f5,
-        #7facf6,
-        #79b8f7,
-        #73c1f8,
-        #6dc9f9,
-        #67d2fa,
-        #61dafb);
+        #1e3a8a,
+        #3b82f6,
+        var(--primary-color),
+        #6a5acd,
+        #5b21b6);
   position: absolute;
   top: -2px;
   left: -2px;
@@ -152,16 +141,13 @@ li {
 .mobile-link-button {
   margin: 10px;
   padding: 10px;
-  border-radius: 10px;
-  background-color: var(--secondary-color);
-  color: white;
-  border: none;
-  transition: transform 0.8s;
+  border-radius: 5px;
+  border: 2px solid var(--primary-color);
+  background-color: transparent;
+  color: var(--primary-color);
 }
-
 .mobile-link-button:hover {
   text-decoration: none;
-  transform: scale(1.2);
 }
 
 .project-icon-container {
