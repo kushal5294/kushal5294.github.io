@@ -107,7 +107,7 @@ function Project({ project }) {
               <>
                 <button
                   className="btn"
-                  onClick={() => window.open(project.link2)}
+                  onClick={() => (window.location.href = project.link2)}
                 >
                   {project.link2_button}
                 </button>
