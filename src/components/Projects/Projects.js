@@ -9,6 +9,7 @@ import Basketball from "../../assets/basketball.png";
 import Instagram from "../../assets/instagram.png";
 import { useState, useEffect } from "react";
 
+// Link 2 is for same website pages and Link 4 is hidden on mobile devices
 const projects = [
   {
     title: "NFL Spread Algorithm",
@@ -22,9 +23,11 @@ const projects = [
     link1_button: "Source Code",
     link2: "/nfl_spread.html",
     link2_button: "Weekly Picks",
-    link3:
+    link3: "",
+    link3_button: "",
+    link4:
       "https://docs.google.com/spreadsheets/d/1wqIOPtzO4Edi57mzGHW_4gPbAyrmfRpjW2_MfSkotRI/edit#gid=0",
-    link3_button: "Performance Tracking",
+    link4_button: "Performance Tracking",
   },
   {
     title: "Search Engine",
@@ -41,6 +44,8 @@ const projects = [
     link2_button: "Video Demo",
     link3: "",
     link3_button: "",
+    link4: "",
+    link4_button: "",
   },
   {
     title: "Personal Portfolio",
@@ -55,9 +60,11 @@ const projects = [
     link2_button: "Live Demo",
     link3: "",
     link3_button: "",
+    link4: "",
+    link4_button: "",
   },
   {
-    title: "Auto-Captioning Tool",
+    title: "AI Alt Text",
     concise: "Automatically generates alt text for images in Wordpress",
     description:
       "<ul><li>Automatically generates alt text for images in Wordpress</li><li>Regeneration feature that accepts user feedback to improve all text</li></ul>",
@@ -66,10 +73,12 @@ const projects = [
     icon_size: "75px",
     link1: "",
     link1_button: "",
-    link2: "",
-    link2_button: "",
+    link2: "/ai_caption.html",
+    link2_button: "Video Demo",
     link3: "",
     link3_button: "",
+    link4: "",
+    link4_button: "",
   },
   {
     title: "March Madness Bracket Predictor",
@@ -85,6 +94,8 @@ const projects = [
     link2_button: "",
     link3: "https://www.wolverinesportsanalytics.com/projects/march-madness/",
     link3_button: "More",
+    link4: "",
+    link4_button: "",
   },
   {
     title: "Instagram Clone",
@@ -101,6 +112,8 @@ const projects = [
     link2_button: "",
     link3: "",
     link3_button: "",
+    link4: "",
+    link4_button: "",
   },
 ];
 

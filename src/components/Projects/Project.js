@@ -53,6 +53,18 @@ function Project({ project }) {
                 </a>
               </>
             ) : null}
+            {project.link3 !== "" ? (
+              <>
+                <a
+                  className="mobile-link-button"
+                  href={project.link1}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {project.link3_button}
+                </a>
+              </>
+            ) : null}
           </div>
         </div>
       );
@@ -103,6 +115,7 @@ function Project({ project }) {
                 </button>
               </>
             ) : null}
+            {/* Same website link */}
             {project.link2 !== "" ? (
               <>
                 <button
@@ -122,6 +135,19 @@ function Project({ project }) {
                   }
                 >
                   {project.link3_button}
+                </button>
+              </>
+            ) : null}
+            {/* Hidden on Mobile */}
+            {project.link4 !== "" ? (
+              <>
+                <button
+                  className="btn"
+                  onClick={() =>
+                    window.open(project.link4, "_blank", "noopener noreferrer")
+                  }
+                >
+                  {project.link4_button}
                 </button>
               </>
             ) : null}
