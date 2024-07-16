@@ -1,22 +1,23 @@
 {
   "files": {
     "main.css": "/static/css/main.82c6c33e.css",
-    "main.js": "/static/js/main.4d55bd44.js",
+    "main.js": "/static/js/main.6d8cf0f2.js",
     "static/js/453.1407b060.chunk.js": "/static/js/453.1407b060.chunk.js",
     "static/media/instagram.png": "/static/media/instagram.80e598d8df0c0a94d580.png",
     "static/media/headshot.jpeg": "/static/media/headshot.d2bcaac9117f87212f0c.jpeg",
     "static/media/search_engine.png": "/static/media/search_engine.401c18175fdfd7260203.png",
+    "static/media/BallotBank.png": "/static/media/BallotBank.473f490d0e490e8cd4a8.png",
     "static/media/basketball.png": "/static/media/basketball.aff087810e2d89c8af5a.png",
     "static/media/football.png": "/static/media/football.58df2fa19ac195c1604b.png",
     "static/media/accessibility.png": "/static/media/accessibility.5d06ab1ba1f5a445cdab.png",
     "static/media/portfolio.png": "/static/media/portfolio.49b0f92ae9bbba8ce2bf.png",
     "index.html": "/index.html",
     "main.82c6c33e.css.map": "/static/css/main.82c6c33e.css.map",
-    "main.4d55bd44.js.map": "/static/js/main.4d55bd44.js.map",
+    "main.6d8cf0f2.js.map": "/static/js/main.6d8cf0f2.js.map",
     "453.1407b060.chunk.js.map": "/static/js/453.1407b060.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.82c6c33e.css",
-    "static/js/main.4d55bd44.js"
+    "static/js/main.6d8cf0f2.js"
   ]
 }
