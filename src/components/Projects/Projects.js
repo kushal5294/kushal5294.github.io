@@ -5,6 +5,7 @@ import Football from "../../assets/football.png";
 import Search_Engine from "../../assets/search_engine.png";
 import Portfolio from "../../assets/portfolio.png";
 import Alt from "../../assets/accessibility.png";
+import BallotBank from "../../assets/BallotBank.png";
 import Basketball from "../../assets/basketball.png";
 import Instagram from "../../assets/instagram.png";
 import { useState, useEffect } from "react";
@@ -64,7 +65,7 @@ const projects = [
     link4_button: "",
   },
   {
-    title: "AI Alt Text",
+    title: "AI Caption Generator",
     concise: "Automatically generates alt text for images in Wordpress",
     description:
       "<ul><li>Automatically generates alt text for images in Wordpress</li><li>Regeneration feature that accepts user feedback to improve all text</li></ul>",
@@ -81,22 +82,39 @@ const projects = [
     link4_button: "",
   },
   {
-    title: "March Madness Bracket Predictor",
-    concise: "ML model that finished in the 84th percentile in 2023",
+    title: "Ballot Bank",
+    concise: "IOS crypto wallet and blockchain voting app",
     description:
-      "Machine learning model that finished in the 84th percentile on ESPN's Tournament Challenge in 2023",
-    tags: ["Python", "TensorFlow", "Beautiful Soup", "ML"],
-    icon: Basketball,
-    icon_size: "100px",
-    link1: "https://www.wolverinesportsanalytics.com/featured",
-    link1_button: "Full Bracket",
-    link2: "",
-    link2_button: "",
-    link3: "https://www.wolverinesportsanalytics.com/projects/march-madness/",
-    link3_button: "More",
+      "IOS application featuring:<ul><li>Live valuation of top 100 cryptocurrencies</li><li>Log crypto wallet to view live portfolio worth and graphs</li><li>Fully decentralized voting platform via mock blockchain</li></ul>",
+    tags: ["Swift", "SwiftUI", "Blockchain", "IOS", "Crypto"],
+    icon: BallotBank,
+    icon_size: "80px",
+    link1: "https://github.com/kushal5294/Ballot_Bank",
+    link1_button: "Source Code",
+    link2: "/ballot_bank.html",
+    link2_button: "Video Demo",
+    link3: "",
+    link3_button: "",
     link4: "",
     link4_button: "",
   },
+  // {
+  //   title: "March Madness Bracket Predictor",
+  //   concise: "ML model that finished in the 84th percentile in 2023",
+  //   description:
+  //     "Machine learning model that finished in the 84th percentile on ESPN's Tournament Challenge in 2023",
+  //   tags: ["Python", "TensorFlow", "Beautiful Soup", "ML"],
+  //   icon: Basketball,
+  //   icon_size: "100px",
+  //   link1: "https://www.wolverinesportsanalytics.com/featured",
+  //   link1_button: "Full Bracket",
+  //   link2: "",
+  //   link2_button: "",
+  //   link3: "https://www.wolverinesportsanalytics.com/projects/march-madness/",
+  //   link3_button: "More",
+  //   link4: "",
+  //   link4_button: "",
+  // },
   {
     title: "Instagram Clone",
     concise:
