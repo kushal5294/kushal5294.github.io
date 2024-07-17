@@ -83,10 +83,10 @@ const projects = [
   },
   {
     title: "Ballot Bank",
-    concise: "IOS crypto wallet and blockchain voting app",
+    concise: "iOS crypto wallet and blockchain voting app",
     description:
-      "IOS application featuring:<ul><li>Live valuation of top 100 cryptocurrencies</li><li>Log crypto wallet to view live portfolio worth and graphs</li><li>Fully decentralized voting platform via mock blockchain</li></ul>",
-    tags: ["Swift", "SwiftUI", "Blockchain", "IOS", "Crypto"],
+      "iOS application featuring:<ul><li>Live valuation of top 100 cryptocurrencies</li><li>Log crypto wallet to view live portfolio worth and graphs</li><li>Fully decentralized voting platform via mock blockchain</li></ul>",
+    tags: ["Swift", "SwiftUI", "Blockchain", "iOS", "Crypto"],
     icon: BallotBank,
     icon_size: "80px",
     link1: "https://github.com/kushal5294/Ballot_Bank",
