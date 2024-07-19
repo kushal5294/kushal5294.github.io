@@ -15,7 +15,7 @@ body {
 
 .final-results {
   text-align: center;
-  margin: 40px 0;
+  margin-bottom: 20px;
   padding: 10px;
   color: #ffffff;
   font-size: 2rem;
@@ -37,6 +37,7 @@ footer {
 table {
   width: 60%;
   margin: 20px auto;
+  margin-top:30px;
   padding: 20px;
   border-collapse: collapse;
     font-family: "Trebuchet MS", sans-serif;
@@ -163,13 +164,37 @@ th {
   flex-grow: 1;
 }
 .disclaimer {
-  margin: 5px;
+  margin-top: 15px;
   padding-bottom: 2px;
-  font-size: 1.2em;
+  font-size: 1em;
   font-weight: bold;
-  color: #f2f2f2;
+  color: #61dafb;;
   text-align: center;
   display: none;
+  margin-right: 5px;
+}
+.table-header {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  width: 100%;
+  font-size: 32px;
+  margin-top: 40px;
+}
+.results-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+}
+.organized-container {
+  border: 1px solid #61dafb;
+  border-radius: 10px;
+  padding: 10px;
+  margin-top: 40px;
+  width: 60%;
+  margin-right: 30px;
 }
 .video-container {
   display: flex;
