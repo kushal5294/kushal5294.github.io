@@ -8,6 +8,7 @@ import Alt from "../../assets/accessibility.png";
 import BallotBank from "../../assets/BallotBank.png";
 import Basketball from "../../assets/basketball.png";
 import Instagram from "../../assets/instagram.png";
+import GymRat from "../../assets/gymRat.png";
 import { useState, useEffect } from "react";
 
 // Link 2 is for same website pages and Link 4 is hidden on mobile devices
@@ -86,7 +87,7 @@ const projects = [
     concise: "iOS crypto wallet and blockchain voting app",
     description:
       "iOS application featuring:<ul><li>Live valuation of top 100 cryptocurrencies</li><li>Log crypto wallet to view live portfolio worth and graphs</li><li>Fully decentralized voting platform via mock blockchain</li></ul>",
-    tags: ["Swift", "SwiftUI", "Blockchain", "iOS", "Crypto"],
+    tags: ["Swift", "SwiftUI", "Blockchain", "MongoDB", "iOS", "Crypto"],
     icon: BallotBank,
     icon_size: "80px",
     link1: "https://github.com/kushal5294/Ballot_Bank",
@@ -115,17 +116,34 @@ const projects = [
   //   link4: "",
   //   link4_button: "",
   // },
+  // {
+  //   title: "Instagram Clone",
+  //   concise:
+  //     "Client side dynamic platform that emulates the functionality of Instagram",
+  //   description:
+  //     "Client side dynamic platform that emulates the functionality of Instagram",
+  //   tags: ["React", "Python", "Flask", "Rest API", "SQLite", "AWS"],
+  //   icon: Instagram,
+  //   icon_size: "80px",
+  //   link1: "",
+  //   link1_button: "",
+  //   link2: "",
+  //   link2_button: "",
+  //   link3: "",
+  //   link3_button: "",
+  //   link4: "",
+  //   link4_button: "",
+  // },
   {
-    title: "Instagram Clone",
-    concise:
-      "Client side dynamic platform that emulates the functionality of Instagram",
+    title: "GymRat",
+    concise: "Social networking app promoting friendly motivation and health",
     description:
-      "Client side dynamic platform that emulates the functionality of Instagram",
-    tags: ["React", "Python", "Flask", "Rest API", "SQLite", "AWS"],
-    icon: Instagram,
-    icon_size: "80px",
-    link1: "",
-    link1_button: "",
+      "Social networking app promoting friendly motivation and health<br><br> ⚙️ In Progress ⚙️",
+    tags: ["Swift", "SwiftUI", "Social Media", "FireBase", "iOS"],
+    icon: GymRat,
+    icon_size: "110px",
+    link1: "https://github.com/kushal5294/Gymstagram",
+    link1_button: "Source Code",
     link2: "",
     link2_button: "",
     link3: "",
