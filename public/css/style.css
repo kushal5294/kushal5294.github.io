@@ -187,7 +187,6 @@ th {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 15px;
 }
 .organized-container {
   border: 1px solid #61dafb;
@@ -195,7 +194,6 @@ th {
   padding: 10px;
   margin-top: 40px;
   width: 60%;
-  margin-right: 30px;
 }
 .video-container {
   display: flex;

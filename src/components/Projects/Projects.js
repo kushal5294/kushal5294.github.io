@@ -141,7 +141,7 @@ const projects = [
       "Social networking app promoting friendly motivation and health<br><br> ⚙️ In Progress ⚙️",
     tags: ["Swift", "SwiftUI", "Social Media", "FireBase", "iOS"],
     icon: GymRat,
-    icon_size: "110px",
+    icon_size: "100px",
     link1: "https://github.com/kushal5294/Gymstagram",
     link1_button: "Source Code",
     link2: "",
