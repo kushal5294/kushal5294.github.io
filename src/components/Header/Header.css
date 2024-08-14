@@ -1,4 +1,29 @@
 @import url('../../index.css');
+
+@keyframes slide-in-left {
+  0% {
+    transform: translateX(-20%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-right {
+  0% {
+    transform: translateX(20%);
+    opacity: 0;
+  }
+
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
 @keyframes tilt-shaking {
   0% {
     transform: rotate(0deg);
@@ -32,6 +57,7 @@
 .header-content {
   text-align: left;
   font-size: 20px;
+  animation: slide-in-left 1s ease-in-out forwards;
 }
 span.gentle-hover-shake {
   display: inline-block;
@@ -46,6 +72,7 @@ span.gentle-hover-shake:hover {
 .profile-pic {
   height: 100%;
   width: 300px;
+    animation: slide-in-right 1s ease-in-out forwards;
 }
 @media screen and (max-width: 767px) {
   .header {
