@@ -15,12 +15,7 @@ function Header() {
           <span className="highlight">The University of Michigan</span>
         </p>
       </div>
-      <img
-        loading="lazy"
-        src={profile}
-        alt="headshot"
-        className="profile-pic"
-      />
+      <img src={profile} alt="headshot" className="profile-pic" />
     </header>
   );
 }

@@ -14,7 +14,7 @@ import { useState, useEffect } from "react";
 // Link 2 is for same website pages and Link 4 is hidden on mobile devices
 const projects = [
   {
-    title: "NFL Spread Algorithm",
+    title: "NFL Spread Predictor",
     concise: "ML model that won +25 units in the 2023 NFL season",
     description:
       "<ul><li>Neural network regression model that predicts the score differential of future NFL matches</li><li>Finished +25 units during the 2023-2024 NFL season against the DraftKings sportsbook</li></ul>",
@@ -174,7 +174,9 @@ function Projects() {
       {gridToggle ? (
         <div className="projects-grid">
           {projects.map((project, index) => (
-            <Project key={index} project={project} />
+            <div className="project">
+              <Project key={index} project={project} />
+            </div>
           ))}
         </div>
       ) : null}
