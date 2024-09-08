@@ -39,7 +39,8 @@ function Navbar() {
         >
           LinkedIn
         </a>
-        {/* 
+        {/*}        */}
+
         <a
           href="/Kushal_Patel_Resume.pdf"
           target="_blank"
@@ -47,7 +48,6 @@ function Navbar() {
         >
           Resume
         </a>
-        */}
       </div>
     </nav>
   );
