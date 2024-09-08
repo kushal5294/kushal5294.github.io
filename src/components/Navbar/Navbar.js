@@ -42,7 +42,7 @@ function Navbar() {
         {/*}        */}
 
         <a
-          href="/Kushal_Patel_Resume.pdf"
+          href="/Kushal_Patel_resume.pdf"
           target="_blank"
           rel="noopener noreferrer"
         >
