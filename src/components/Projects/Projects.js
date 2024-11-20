@@ -66,16 +66,17 @@ const projects = [
     link4_button: "",
   },
   {
-    title: "AI Caption Generator",
-    concise: "Automatically generates alt text for images in Wordpress",
+    title: "Auto Alt Text",
+    concise:
+      "Automatically generates alt text for images in Wordpress, Drupal, and Google Docs Suite",
     description:
-      "<ul><li>Automatically generates alt text for images in Wordpress</li><li>Regeneration feature that accepts user feedback to improve all text</li></ul>",
-    tags: ["PHP", "JavaScript", "AI", "Accessibility", "Wordpress"],
+      "<ul><li>Automatic generation for images</li><li>Regeneration feature</li><li>Tools for  Wordpress, Drupal, and Google Docs Suite</li></ul>",
+    tags: ["PHP", "JavaScript", "Gen AI", "Accessibility", "Azure", "Open AI"],
     icon: Alt,
     icon_size: "75px",
     link1: "",
     link1_button: "",
-    link2: "/ai_caption.html",
+    link2: "/auto_alt.html",
     link2_button: "Video Demo",
     link3: "",
     link3_button: "",
