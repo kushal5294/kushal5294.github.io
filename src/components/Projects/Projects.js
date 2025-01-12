@@ -15,9 +15,9 @@ import { useState, useEffect } from "react";
 const projects = [
   {
     title: "NFL Spread Predictor",
-    concise: "ML model that won +25 units in the 2023 NFL season",
+    concise: "ML model that won +37 units in the 2023 NFL season",
     description:
-      "<ul><li>Neural network regression model that predicts the score differential of future NFL matches</li><li>Finished +25 units during the 2023-2024 NFL season against the DraftKings sportsbook</li></ul>",
+      "<ul><li>Neural network regression model that predicts the score differential of future NFL matches</li><li>Finished +37 units during the 2023-2024 NFL season against the DraftKings sportsbook</li></ul>",
     tags: ["Python", "TensorFlow", "Selenium", "Pandas", "ML"],
     icon: Football,
     icon_size: "110px",
@@ -27,9 +27,8 @@ const projects = [
     link2_button: "Weekly Picks",
     link3: "",
     link3_button: "",
-    link4:
-      "https://docs.google.com/spreadsheets/d/1wqIOPtzO4Edi57mzGHW_4gPbAyrmfRpjW2_MfSkotRI/edit#gid=0",
-    link4_button: "Performance Tracker",
+    link4: "",
+    link4_button: "",
   },
   {
     title: "Search Engine",
