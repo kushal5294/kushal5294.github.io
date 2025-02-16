@@ -6,6 +6,134 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>NFL Spread Results</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script>
+      function toggleTable() {
+        const picks = document.getElementById("picks");
+        const disclaimer = document.getElementById("disclaimer");
+        const button = document.getElementById("toggle-button");
+        if (picks.style.display === "none") {
+          picks.style.display = "block";
+          button.textContent = "Hide Picks";
+        } else {
+          picks.style.display = "none";
+          button.textContent = "Show Picks";
+        }
+      }
+    </script>
+    <script>
+      const nflTeams = [
+        "Arizona Cardinals",
+        "Atlanta Falcons",
+        "Baltimore Ravens",
+        "Buffalo Bills",
+        "Carolina Panthers",
+        "Chicago Bears",
+        "Cincinnati Bengals",
+        "Cleveland Browns",
+        "Dallas Cowboys",
+        "Denver Broncos",
+        "Detroit Lions",
+        "Green Bay Packers",
+        "Houston Texans",
+        "Indianapolis Colts",
+        "Jacksonville Jaguars",
+        "Kansas City Chiefs",
+        "Las Vegas Raiders",
+        "Los Angeles Chargers",
+        "Los Angeles Rams",
+        "Miami Dolphins",
+        "Minnesota Vikings",
+        "New England Patriots",
+        "New Orleans Saints",
+        "New York Giants",
+        "New York Jets",
+        "Philadelphia Eagles",
+        "Pittsburgh Steelers",
+        "San Francisco 49ers",
+        "Seattle Seahawks",
+        "Tampa Bay Buccaneers",
+        "Tennessee Titans",
+        "Washington Commanders",
+      ];
+      const urlMap = {
+        "San Francisco 49ers": "sf",
+        "New York Jets": "nyj",
+        "New York Giants": "nyg",
+        "New Orleans Saints": "no",
+        "New England Patriots": "ne",
+        "Los Angeles Rams": "lar",
+        "Los Angeles Chargers": "lac",
+        "Las Vegas Raiders": "lv",
+        "Green Bay Packers": "gb",
+      };
+
+      let spreadData = {};
+
+      async function loadSpreadData() {
+        try {
+          const response = await fetch("2024_all_spreads.json");
+          spreadData = await response.json();
+        } catch (error) {
+          console.error("Error loading spread data:", error);
+        }
+      }
+
+      function populateDropdowns() {
+        const homeDropdown = document.getElementById("home-team");
+        const awayDropdown = document.getElementById("away-team");
+
+        nflTeams.forEach((team) => {
+          let option1 = new Option(team, team);
+          let option2 = new Option(team, team);
+          homeDropdown.add(option1);
+          awayDropdown.add(option2);
+        });
+      }
+      function updateMatchupLogos(awayTeam, homeTeam) {
+        document.getElementById("away-logo").src = getTeamURL(awayTeam);
+        document.getElementById("home-logo").src = getTeamURL(homeTeam);
+      }
+
+      function getTeamURL(team) {
+        if (team in urlMap) {
+          return `https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/${urlMap[team]}.png&h=200&w=200`;
+        } else {
+          return `https://a.espncdn.com/combiner/i?img=/i/teamlogos/nfl/500/${team
+            .substring(0, 3)
+            .toLowerCase()}.png&h=200&w=200`;
+        }
+      }
+
+      function simulateMatchup() {
+        const homeTeam = document.getElementById("home-team").value;
+        const awayTeam = document.getElementById("away-team").value;
+        const logoRow = document.getElementById("logos");
+        const resultDisplay = document.getElementById("spread-result");
+        const home = homeTeam.split(" ").pop();
+        const away = awayTeam.split(" ").pop();
+
+        if (!homeTeam || !awayTeam || homeTeam === awayTeam) {
+          resultDisplay.textContent = "Please select two different teams.";
+          return;
+        }
+        updateMatchupLogos(awayTeam, homeTeam);
+        logoRow.style.display = "flex";
+
+        const result = spreadData[homeTeam][awayTeam];
+        if (result < 0) {
+          resultDisplay.textContent = `${home} wins by ${-1 * result} points`;
+        } else if (result > 0) {
+          resultDisplay.textContent = `${away} wins by ${result} points`;
+        } else {
+          resultDisplay.textContent = `${away} and ${home} tie`;
+        }
+      }
+
+      window.onload = async () => {
+        populateDropdowns();
+        await loadSpreadData();
+      };
+    </script>
   </head>
   <body>
     <header>
@@ -40,1814 +168,1846 @@
           >
             Source Code
           </button>
+          <button id="toggle-button" class="btn" onclick="toggleTable()">
+            Show Picks
+          </button>
         </div>
       </div>
     </div>
-    <div class="table-header">🏈 Weekly Picks 🏈</div>
-    <p class="disclaimer">* Open in desktop to see all data</p>
 
-    <table>
-      <thead>
-        <tr class="format">
-          <th class="want">Week</th>
-          <th>Away Team</th>
-          <th class="want"></th>
-          <th>Home Team</th>
-          <th>Model Prediction</th>
-          <th class="want">DraftKings Line</th>
-          <th>Won Bet?</th>
+    <div class="matchups">
+      <h1>🏈 2024 Matchup Simulator 🏈</h1>
+      <div class="team-row">
+        <div class="team">
+          <label for="away-team">Away Team</label>
+          <select id="away-team">
+            <option value="" disabled selected>Select a team</option>
+          </select>
+        </div>
+        <div class="team">
+          <label for="home-team">Home Team</label>
+          <select id="home-team">
+            <option value="" disabled selected>Select a team</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" onclick="simulateMatchup()">Simulate</button>
+      <div id="logos" class="matchup-row" style="display: none">
+        <img id="away-logo" class="team-logo" src="" alt="Away Team Logo" />
+        <span class="vs-text">vs</span>
+        <img id="home-logo" class="team-logo" src="" alt="Home Team Logo" />
+      </div>
+      <p style="color: white" id="spread-result"></p>
+    </div>
+
+    <div id="picks" style="display: none">
+      <div class="table-header">🏈 2023 Picks 🏈</div>
+      <p class="disclaimer">* Open in desktop to see all data</p>
+
+      <table>
+        <thead>
+          <tr class="format">
+            <th class="want">Week</th>
+            <th>Away Team</th>
+            <th class="want"></th>
+            <th>Home Team</th>
+            <th>Model Prediction</th>
+            <th class="want">DraftKings Line</th>
+            <th>Won Bet?</th>
+          </tr>
+        </thead>
+
+        <tr class="win">
+          <td class="want">10</td>
+          <td>Carolina Panthers</td>
+          <td class="want">vs</td>
+          <td>Chicago Bears</td>
+          <td>CHI -7.3</td>
+          <td class="want">CHI -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
         </tr>
-      </thead>
-
-      <tr class="win">
-        <td class="want">10</td>
-        <td>Carolina Panthers</td>
-        <td class="want">vs</td>
-        <td>Chicago Bears</td>
-        <td>CHI -7.3</td>
-        <td class="want">CHI -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">10</td>
-        <td>Indianapolis Colts</td>
-        <td class="want">vs</td>
-        <td>New England Patriots</td>
-        <td>NE -6.7</td>
-        <td class="want">NE +1.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">10</td>
-        <td>Cleveland Browns</td>
-        <td class="want">vs</td>
-        <td>Baltimore Ravens</td>
-        <td>BAL -11.7</td>
-        <td class="want">BAL -5.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">10</td>
-        <td>Green Bay Packers</td>
-        <td class="want">vs</td>
-        <td>Pittsburgh Steelers</td>
-        <td>PIT -5.3</td>
-        <td class="want">PIT -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">10</td>
-        <td>Houston Texans</td>
-        <td class="want">vs</td>
-        <td>Cincinnati Bengals</td>
-        <td>CIN +6.4</td>
-        <td class="want">CIN -5.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">10</td>
-        <td>New Orleans Saints</td>
-        <td class="want">vs</td>
-        <td>Minnesota Vikings</td>
-        <td>MIN +4.7</td>
-        <td class="want">MIN +3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">10</td>
-        <td>Tennessee Titans</td>
-        <td class="want">vs</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td>TB -7.4</td>
-        <td class="want">TB -2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">10</td>
-        <td>San Francisco 49ers</td>
-        <td class="want">vs</td>
-        <td>Jacksonville Jaguars</td>
-        <td>JAC -2.7</td>
-        <td class="want">JAC +3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">10</td>
-        <td>Atlanta Falcons</td>
-        <td class="want">vs</td>
-        <td>Arizona Cardinals</td>
-        <td>ARI -3.8</td>
-        <td class="want">ARI +2.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">10</td>
-        <td>Detroit Lions</td>
-        <td class="want">vs</td>
-        <td>Los Angeles Chargers</td>
-        <td>LAC -2.6</td>
-        <td class="want">LAC +2.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">10</td>
-        <td>New York Giants</td>
-        <td class="want">vs</td>
-        <td>Dallas Cowboys</td>
-        <td>DAL +0.5</td>
-        <td class="want">DAL -17.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">10</td>
-        <td>Washington Commanders</td>
-        <td class="want">vs</td>
-        <td>Seattle Seahawks</td>
-        <td>SEA -1.1</td>
-        <td class="want">SEA -6.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">10</td>
-        <td>New York Jets</td>
-        <td class="want">vs</td>
-        <td>Las Vegas Raiders</td>
-        <td>LV -4.9</td>
-        <td class="want">LV +1.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">10</td>
-        <td>Denver Broncos</td>
-        <td class="want">vs</td>
-        <td>Buffalo Bills</td>
-        <td>BUF -12.9</td>
-        <td class="want">BUF -7.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">11</td>
-        <td>Cincinnati Bengals</td>
-        <td class="want">vs</td>
-        <td>Baltimore Ravens</td>
-        <td>BAL -9.9</td>
-        <td class="want">BAL -4.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">11</td>
-        <td>Chicago Bears</td>
-        <td class="want">vs</td>
-        <td>Detroit Lions</td>
-        <td>DET -2.8</td>
-        <td class="want">DET -8.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">11</td>
-        <td>Arizona Cardinals</td>
-        <td class="want">vs</td>
-        <td>Houston Texans</td>
-        <td>HOU +1.0</td>
-        <td class="want">HOU -5.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">11</td>
-        <td>Dallas Cowboys</td>
-        <td class="want">vs</td>
-        <td>Carolina Panthers</td>
-        <td>CAR +4.7</td>
-        <td class="want">CAR +11.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">11</td>
-        <td>New York Giants</td>
-        <td class="want">vs</td>
-        <td>Washington Commanders</td>
-        <td>WAS -9.5</td>
-        <td class="want">WAS -7.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">11</td>
-        <td>Tennessee Titans</td>
-        <td class="want">vs</td>
-        <td>Jacksonville Jaguars</td>
-        <td>JAC -6.6</td>
-        <td class="want">JAC -6.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">11</td>
-        <td>Pittsburgh Steelers</td>
-        <td class="want">vs</td>
-        <td>Cleveland Browns</td>
-        <td>CLE -5.4</td>
-        <td class="want">CLE -2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">11</td>
-        <td>Las Vegas Raiders</td>
-        <td class="want">vs</td>
-        <td>Miami Dolphins</td>
-        <td>MIA -7.1</td>
-        <td class="want">MIA -14.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">11</td>
-        <td>Los Angeles Chargers</td>
-        <td class="want">vs</td>
-        <td>Green Bay Packers</td>
-        <td>GB +10.4</td>
-        <td class="want">GB +3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">11</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td class="want">vs</td>
-        <td>San Francisco 49ers</td>
-        <td>SF +3.7</td>
-        <td class="want">SF -13.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">11</td>
-        <td>New York Jets</td>
-        <td class="want">vs</td>
-        <td>Buffalo Bills</td>
-        <td>BUF -13.4</td>
-        <td class="want">BUF -7.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">11</td>
-        <td>Seattle Seahawks</td>
-        <td class="want">vs</td>
-        <td>Los Angeles Rams</td>
-        <td>LAR -9.8</td>
-        <td class="want">LAR -2.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">11</td>
-        <td>Minnesota Vikings</td>
-        <td class="want">vs</td>
-        <td>Denver Broncos</td>
-        <td>DEN +5.1</td>
-        <td class="want">DEN -2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">11</td>
-        <td>Philadelphia Eagles</td>
-        <td class="want">vs</td>
-        <td>Kansas City Chiefs</td>
-        <td>KC -2.7</td>
-        <td class="want">KC -2.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">12</td>
-        <td>Green Bay Packers</td>
-        <td class="want">vs</td>
-        <td>Detroit Lions</td>
-        <td>DET -12.4</td>
-        <td class="want">DET -8.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">12</td>
-        <td>Washington Commanders</td>
-        <td class="want">vs</td>
-        <td>Dallas Cowboys</td>
-        <td>DAL +5.6</td>
-        <td class="want">DAL -13.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">12</td>
-        <td>San Francisco 49ers</td>
-        <td class="want">vs</td>
-        <td>Seattle Seahawks</td>
-        <td>SEA +6.5</td>
-        <td class="want">SEA +7.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">12</td>
-        <td>Miami Dolphins</td>
-        <td class="want">vs</td>
-        <td>New York Jets</td>
-        <td>NYJ +8.2</td>
-        <td class="want">NYJ +9.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">12</td>
-        <td>Carolina Panthers</td>
-        <td class="want">vs</td>
-        <td>Tennessee Titans</td>
-        <td>TEN -8.1</td>
-        <td class="want">TEN -3.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">12</td>
-        <td>Jacksonville Jaguars</td>
-        <td class="want">vs</td>
-        <td>Houston Texans</td>
-        <td>HOU -9.5</td>
-        <td class="want">HOU +1.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">12</td>
-        <td>New Orleans Saints</td>
-        <td class="want">vs</td>
-        <td>Atlanta Falcons</td>
-        <td>ATL 0.0</td>
-        <td class="want">ATL +2.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">12</td>
-        <td>New England Patriots</td>
-        <td class="want">vs</td>
-        <td>New York Giants</td>
-        <td>NYG -9.5</td>
-        <td class="want">NYG +4.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">12</td>
-        <td>Pittsburgh Steelers</td>
-        <td class="want">vs</td>
-        <td>Cincinnati Bengals</td>
-        <td>CIN -6.3</td>
-        <td class="want">CIN +2.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">12</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td class="want">vs</td>
-        <td>Indianapolis Colts</td>
-        <td>IND -13.3</td>
-        <td class="want">IND -2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">12</td>
-        <td>Cleveland Browns</td>
-        <td class="want">vs</td>
-        <td>Denver Broncos</td>
-        <td>DEN -2.5</td>
-        <td class="want">DEN -2.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">12</td>
-        <td>Los Angeles Rams</td>
-        <td class="want">vs</td>
-        <td>Arizona Cardinals</td>
-        <td>ARI -9.0</td>
-        <td class="want">ARI +3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">12</td>
-        <td>Buffalo Bills</td>
-        <td class="want">vs</td>
-        <td>Philadelphia Eagles</td>
-        <td>PHI +0.3</td>
-        <td class="want">PHI -2.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">12</td>
-        <td>Kansas City Chiefs</td>
-        <td class="want">vs</td>
-        <td>Las Vegas Raiders</td>
-        <td>LV -7.9</td>
-        <td class="want">LV +9.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">12</td>
-        <td>Baltimore Ravens</td>
-        <td class="want">vs</td>
-        <td>Los Angeles Chargers</td>
-        <td>LAC +3.5</td>
-        <td class="want">LAC +3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">12</td>
-        <td>Chicago Bears</td>
-        <td class="want">vs</td>
-        <td>Minnesota Vikings</td>
-        <td>MIN -5.2</td>
-        <td class="want">MIN -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">13</td>
-        <td>Seattle Seahawks</td>
-        <td class="want">vs</td>
-        <td>Dallas Cowboys</td>
-        <td>DAL -7.2</td>
-        <td class="want">DAL -9.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">13</td>
-        <td>Atlanta Falcons</td>
-        <td class="want">vs</td>
-        <td>New York Jets</td>
-        <td>NYJ -5.2</td>
-        <td class="want">NYJ +2.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">13</td>
-        <td>Carolina Panthers</td>
-        <td class="want">vs</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td>TB -7.2</td>
-        <td class="want">TB -3.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">13</td>
-        <td>Indianapolis Colts</td>
-        <td class="want">vs</td>
-        <td>Tennessee Titans</td>
-        <td>TEN -8.9</td>
-        <td class="want">TEN +1.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">13</td>
-        <td>Arizona Cardinals</td>
-        <td class="want">vs</td>
-        <td>Pittsburgh Steelers</td>
-        <td>PIT +3.1</td>
-        <td class="want">PIT -6.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">13</td>
-        <td>Detroit Lions</td>
-        <td class="want">vs</td>
-        <td>New Orleans Saints</td>
-        <td>NO +7.9</td>
-        <td class="want">NO +4.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">13</td>
-        <td>Miami Dolphins</td>
-        <td class="want">vs</td>
-        <td>Washington Commanders</td>
-        <td>WAS -4.3</td>
-        <td class="want">WAS +8.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">13</td>
-        <td>Los Angeles Chargers</td>
-        <td class="want">vs</td>
-        <td>New England Patriots</td>
-        <td>NE -7.3</td>
-        <td class="want">NE +4.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">13</td>
-        <td>Denver Broncos</td>
-        <td class="want">vs</td>
-        <td>Houston Texans</td>
-        <td>HOU -8.6</td>
-        <td class="want">HOU -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">13</td>
-        <td>Cleveland Browns</td>
-        <td class="want">vs</td>
-        <td>Los Angeles Rams</td>
-        <td>LAR -1.5</td>
-        <td class="want">LAR -3.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">13</td>
-        <td>San Francisco 49ers</td>
-        <td class="want">vs</td>
-        <td>Philadelphia Eagles</td>
-        <td>PHI -1.8</td>
-        <td class="want">PHI +3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">13</td>
-        <td>Kansas City Chiefs</td>
-        <td class="want">vs</td>
-        <td>Green Bay Packers</td>
-        <td>GB +5.3</td>
-        <td class="want">GB +6.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">13</td>
-        <td>Cincinnati Bengals</td>
-        <td class="want">vs</td>
-        <td>Jacksonville Jaguars</td>
-        <td>JAC -6.7</td>
-        <td class="want">JAC -10.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">14</td>
-        <td>New England Patriots</td>
-        <td class="want">vs</td>
-        <td>Pittsburgh Steelers</td>
-        <td>PIT -9.7</td>
-        <td class="want">PIT -5.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">14</td>
-        <td>Carolina Panthers</td>
-        <td class="want">vs</td>
-        <td>New Orleans Saints</td>
-        <td>NO -9.9</td>
-        <td class="want">NO -5.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">14</td>
-        <td>Indianapolis Colts</td>
-        <td class="want">vs</td>
-        <td>Cincinnati Bengals</td>
-        <td>CIN -5.3</td>
-        <td class="want">CIN -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">14</td>
-        <td>Detroit Lions</td>
-        <td class="want">vs</td>
-        <td>Chicago Bears</td>
-        <td>CHI +11.3</td>
-        <td class="want">CHI +3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">14</td>
-        <td>Houston Texans</td>
-        <td class="want">vs</td>
-        <td>New York Jets</td>
-        <td>NYJ +3.9</td>
-        <td class="want">NYJ +3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">14</td>
-        <td>Jacksonville Jaguars</td>
-        <td class="want">vs</td>
-        <td>Cleveland Browns</td>
-        <td>CLE +6.1</td>
-        <td class="want">CLE -2.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">14</td>
-        <td>Los Angeles Rams</td>
-        <td class="want">vs</td>
-        <td>Baltimore Ravens</td>
-        <td>BAL -4.2</td>
-        <td class="want">BAL -7.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">14</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td class="want">vs</td>
-        <td>Atlanta Falcons</td>
-        <td>ATL -1.7</td>
-        <td class="want">ATL -1.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">14</td>
-        <td>Minnesota Vikings</td>
-        <td class="want">vs</td>
-        <td>Las Vegas Raiders</td>
-        <td>LV +2.6</td>
-        <td class="want">LV +3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">14</td>
-        <td>Seattle Seahawks</td>
-        <td class="want">vs</td>
-        <td>San Francisco 49ers</td>
-        <td>SF -5.2</td>
-        <td class="want">SF -15.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">14</td>
-        <td>Buffalo Bills</td>
-        <td class="want">vs</td>
-        <td>Kansas City Chiefs</td>
-        <td>KC +4.3</td>
-        <td class="want">KC -2.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">14</td>
-        <td>Denver Broncos</td>
-        <td class="want">vs</td>
-        <td>Los Angeles Chargers</td>
-        <td>LAC -12.2</td>
-        <td class="want">LAC -3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">14</td>
-        <td>Philadelphia Eagles</td>
-        <td class="want">vs</td>
-        <td>Dallas Cowboys</td>
-        <td>DAL -7.6</td>
-        <td class="want">DAL -3.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">14</td>
-        <td>Green Bay Packers</td>
-        <td class="want">vs</td>
-        <td>New York Giants</td>
-        <td>NYG -9.5</td>
-        <td class="want">NYG +5.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">14</td>
-        <td>Tennessee Titans</td>
-        <td class="want">vs</td>
-        <td>Miami Dolphins</td>
-        <td>MIA -12.2</td>
-        <td class="want">MIA -13.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">15</td>
-        <td>Los Angeles Chargers</td>
-        <td class="want">vs</td>
-        <td>Las Vegas Raiders</td>
-        <td>LV -3.8</td>
-        <td class="want">LV -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">15</td>
-        <td>Atlanta Falcons</td>
-        <td class="want">vs</td>
-        <td>Carolina Panthers</td>
-        <td>CAR -5.9</td>
-        <td class="want">CAR +2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">15</td>
-        <td>Chicago Bears</td>
-        <td class="want">vs</td>
-        <td>Cleveland Browns</td>
-        <td>CLE +1.5</td>
-        <td class="want">CLE -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">15</td>
-        <td>Denver Broncos</td>
-        <td class="want">vs</td>
-        <td>Detroit Lions</td>
-        <td>DET -12.9</td>
-        <td class="want">DET -5.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">15</td>
-        <td>Houston Texans</td>
-        <td class="want">vs</td>
-        <td>Tennessee Titans</td>
-        <td>TEN -4.5</td>
-        <td class="want">TEN -3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">15</td>
-        <td>Minnesota Vikings</td>
-        <td class="want">vs</td>
-        <td>Cincinnati Bengals</td>
-        <td>CIN +7.4</td>
-        <td class="want">CIN -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">15</td>
-        <td>New York Giants</td>
-        <td class="want">vs</td>
-        <td>New Orleans Saints</td>
-        <td>NO -3.0</td>
-        <td class="want">NO -6.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">15</td>
-        <td>New York Jets</td>
-        <td class="want">vs</td>
-        <td>Miami Dolphins</td>
-        <td>MIA -13.1</td>
-        <td class="want">MIA -7.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">15</td>
-        <td>Pittsburgh Steelers</td>
-        <td class="want">vs</td>
-        <td>Indianapolis Colts</td>
-        <td>IND -12.4</td>
-        <td class="want">IND -1.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">15</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td class="want">vs</td>
-        <td>Green Bay Packers</td>
-        <td>GB -12.1</td>
-        <td class="want">GB -4.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">15</td>
-        <td>San Francisco 49ers</td>
-        <td class="want">vs</td>
-        <td>Arizona Cardinals</td>
-        <td>ARI +6.3</td>
-        <td class="want">ARI +12.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">15</td>
-        <td>Washington Commanders</td>
-        <td class="want">vs</td>
-        <td>Los Angeles Rams</td>
-        <td>LAR -9.2</td>
-        <td class="want">LAR -7.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">15</td>
-        <td>Dallas Cowboys</td>
-        <td class="want">vs</td>
-        <td>Buffalo Bills</td>
-        <td>BUF +7.7</td>
-        <td class="want">BUF -2.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">15</td>
-        <td>Philadelphia Eagles</td>
-        <td class="want">vs</td>
-        <td>Seattle Seahawks</td>
-        <td>SEA +1.4</td>
-        <td class="want">SEA +5.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">15</td>
-        <td>Baltimore Ravens</td>
-        <td class="want">vs</td>
-        <td>Jacksonville Jaguars</td>
-        <td>JAC -2.0</td>
-        <td class="want">JAC +4.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">15</td>
-        <td>Kansas City Chiefs</td>
-        <td class="want">vs</td>
-        <td>New England Patriots</td>
-        <td>NE +3.6</td>
-        <td class="want">NE +10.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>New Orleans Saints</td>
-        <td class="want">vs</td>
-        <td>Los Angeles Rams</td>
-        <td>LAR -4.2</td>
-        <td class="want">LAR -4.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Cincinnati Bengals</td>
-        <td class="want">vs</td>
-        <td>Pittsburgh Steelers</td>
-        <td>PIT -10.5</td>
-        <td class="want">PIT +3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Buffalo Bills</td>
-        <td class="want">vs</td>
-        <td>Los Angeles Chargers</td>
-        <td>LAC -2.8</td>
-        <td class="want">LAC +12.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">16</td>
-        <td>Cleveland Browns</td>
-        <td class="want">vs</td>
-        <td>Houston Texans</td>
-        <td>HOU -2.2</td>
-        <td class="want">HOU +3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Indianapolis Colts</td>
-        <td class="want">vs</td>
-        <td>Atlanta Falcons</td>
-        <td>ATL -2.2</td>
-        <td class="want">ATL -2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Detroit Lions</td>
-        <td class="want">vs</td>
-        <td>Minnesota Vikings</td>
-        <td>MIN +3.3</td>
-        <td class="want">MIN +2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Green Bay Packers</td>
-        <td class="want">vs</td>
-        <td>Carolina Panthers</td>
-        <td>CAR -5.9</td>
-        <td class="want">CAR +3.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Seattle Seahawks</td>
-        <td class="want">vs</td>
-        <td>Tennessee Titans</td>
-        <td>TEN -11.1</td>
-        <td class="want">TEN +3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Washington Commanders</td>
-        <td class="want">vs</td>
-        <td>New York Jets</td>
-        <td>NYJ +6.6</td>
-        <td class="want">NYJ -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Jacksonville Jaguars</td>
-        <td class="want">vs</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td>TB -9.1</td>
-        <td class="want">TB +2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Arizona Cardinals</td>
-        <td class="want">vs</td>
-        <td>Chicago Bears</td>
-        <td>CHI -11.0</td>
-        <td class="want">CHI -4.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Dallas Cowboys</td>
-        <td class="want">vs</td>
-        <td>Miami Dolphins</td>
-        <td>MIA -11.9</td>
-        <td class="want">MIA -1.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>New England Patriots</td>
-        <td class="want">vs</td>
-        <td>Denver Broncos</td>
-        <td>DEN -6.6</td>
-        <td class="want">DEN -7.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">16</td>
-        <td>Las Vegas Raiders</td>
-        <td class="want">vs</td>
-        <td>Kansas City Chiefs</td>
-        <td>KC -11.1</td>
-        <td class="want">KC -11.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>New York Giants</td>
-        <td class="want">vs</td>
-        <td>Philadelphia Eagles</td>
-        <td>PHI -12.8</td>
-        <td class="want">PHI -14.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">16</td>
-        <td>Baltimore Ravens</td>
-        <td class="want">vs</td>
-        <td>San Francisco 49ers</td>
-        <td>SF -3.3</td>
-        <td class="want">SF -6.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">17</td>
-        <td>New York Jets</td>
-        <td class="want">vs</td>
-        <td>Cleveland Browns</td>
-        <td>CLE -12.2</td>
-        <td class="want">CLE -7.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">17</td>
-        <td>Detroit Lions</td>
-        <td class="want">vs</td>
-        <td>Dallas Cowboys</td>
-        <td>DAL -3.3</td>
-        <td class="want">DAL -4.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">17</td>
-        <td>Atlanta Falcons</td>
-        <td class="want">vs</td>
-        <td>Chicago Bears</td>
-        <td>CHI -1.3</td>
-        <td class="want">CHI -3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">17</td>
-        <td>Carolina Panthers</td>
-        <td class="want">vs</td>
-        <td>Jacksonville Jaguars</td>
-        <td>JAC -9.9</td>
-        <td class="want">JAC -7.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">17</td>
-        <td>Arizona Cardinals</td>
-        <td class="want">vs</td>
-        <td>Philadelphia Eagles</td>
-        <td>PHI -8.1</td>
-        <td class="want">PHI -10.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">17</td>
-        <td>Miami Dolphins</td>
-        <td class="want">vs</td>
-        <td>Baltimore Ravens</td>
-        <td>BAL +5.2</td>
-        <td class="want">BAL -4.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">17</td>
-        <td>New Orleans Saints</td>
-        <td class="want">vs</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td>TB -3.8</td>
-        <td class="want">TB -3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">17</td>
-        <td>New England Patriots</td>
-        <td class="want">vs</td>
-        <td>Buffalo Bills</td>
-        <td>BUF -13.6</td>
-        <td class="want">BUF -15.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">17</td>
-        <td>Tennessee Titans</td>
-        <td class="want">vs</td>
-        <td>Houston Texans</td>
-        <td>HOU -10.4</td>
-        <td class="want">HOU -3.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">17</td>
-        <td>Las Vegas Raiders</td>
-        <td class="want">vs</td>
-        <td>Indianapolis Colts</td>
-        <td>IND -13.3</td>
-        <td class="want">IND -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">17</td>
-        <td>Los Angeles Rams</td>
-        <td class="want">vs</td>
-        <td>New York Giants</td>
-        <td>NYG -4.9</td>
-        <td class="want">NYG +6.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">17</td>
-        <td>San Francisco 49ers</td>
-        <td class="want">vs</td>
-        <td>Washington Commanders</td>
-        <td>WAS +2.0</td>
-        <td class="want">WAS +13.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">17</td>
-        <td>Pittsburgh Steelers</td>
-        <td class="want">vs</td>
-        <td>Seattle Seahawks</td>
-        <td>SEA -9.9</td>
-        <td class="want">SEA -3.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">17</td>
-        <td>Cincinnati Bengals</td>
-        <td class="want">vs</td>
-        <td>Kansas City Chiefs</td>
-        <td>KC -3.0</td>
-        <td class="want">KC -7.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">17</td>
-        <td>Los Angeles Chargers</td>
-        <td class="want">vs</td>
-        <td>Denver Broncos</td>
-        <td>DEN -5.8</td>
-        <td class="want">DEN -5.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">17</td>
-        <td>Green Bay Packers</td>
-        <td class="want">vs</td>
-        <td>Minnesota Vikings</td>
-        <td>MIN -2.2</td>
-        <td class="want">MIN -2.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">18</td>
-        <td>Atlanta Falcons</td>
-        <td class="want">vs</td>
-        <td>New Orleans Saints</td>
-        <td>NO -3.0</td>
-        <td class="want">NO -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">18</td>
-        <td>Buffalo Bills</td>
-        <td class="want">vs</td>
-        <td>Miami Dolphins</td>
-        <td>MIA +0.8</td>
-        <td class="want">MIA +2.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">18</td>
-        <td>Chicago Bears</td>
-        <td class="want">vs</td>
-        <td>Green Bay Packers</td>
-        <td>GB -4.4</td>
-        <td class="want">GB -2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">18</td>
-        <td>Cleveland Browns</td>
-        <td class="want">vs</td>
-        <td>Cincinnati Bengals</td>
-        <td>CIN -1.6</td>
-        <td class="want">CIN -7.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">18</td>
-        <td>Dallas Cowboys</td>
-        <td class="want">vs</td>
-        <td>Washington Commanders</td>
-        <td>WAS +1.6</td>
-        <td class="want">WAS +13.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">18</td>
-        <td>Denver Broncos</td>
-        <td class="want">vs</td>
-        <td>Las Vegas Raiders</td>
-        <td>LV -10.2</td>
-        <td class="want">LV -3.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">18</td>
-        <td>Houston Texans</td>
-        <td class="want">vs</td>
-        <td>Indianapolis Colts</td>
-        <td>IND +7.2</td>
-        <td class="want">IND +1.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">18</td>
-        <td>Jacksonville Jaguars</td>
-        <td class="want">vs</td>
-        <td>Tennessee Titans</td>
-        <td>TEN -9.0</td>
-        <td class="want">TEN +3.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">18</td>
-        <td>Kansas City Chiefs</td>
-        <td class="want">vs</td>
-        <td>Los Angeles Chargers</td>
-        <td>LAC -4.3</td>
-        <td class="want">LAC -3.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">18</td>
-        <td>Minnesota Vikings</td>
-        <td class="want">vs</td>
-        <td>Detroit Lions</td>
-        <td>DET -9.5</td>
-        <td class="want">DET -3.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">18</td>
-        <td>New York Jets</td>
-        <td class="want">vs</td>
-        <td>New England Patriots</td>
-        <td>NE -10.5</td>
-        <td class="want">NE -2.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">18</td>
-        <td>Philadelphia Eagles</td>
-        <td class="want">vs</td>
-        <td>New York Giants</td>
-        <td>NYG -3.5</td>
-        <td class="want">NYG +5.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">18</td>
-        <td>Pittsburgh Steelers</td>
-        <td class="want">vs</td>
-        <td>Baltimore Ravens</td>
-        <td>BAL -14.0</td>
-        <td class="want">BAL +3.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">18</td>
-        <td>Los Angeles Rams</td>
-        <td class="want">vs</td>
-        <td>San Francisco 49ers</td>
-        <td>SF -6.2</td>
-        <td class="want">SF -5.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">18</td>
-        <td>Seattle Seahawks</td>
-        <td class="want">vs</td>
-        <td>Arizona Cardinals</td>
-        <td>ARI -2.1</td>
-        <td class="want">ARI +3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">18</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td class="want">vs</td>
-        <td>Carolina Panthers</td>
-        <td>CAR -7.1</td>
-        <td class="want">CAR +4.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">Wild Card</td>
-        <td>Cleveland Browns</td>
-        <td class="want">vs</td>
-        <td>Houston Texans</td>
-        <td>HOU -2.2</td>
-        <td class="want">HOU +2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">Wild Card</td>
-        <td>Pittsburgh Steelers</td>
-        <td class="want">vs</td>
-        <td>Buffalo Bills</td>
-        <td>BUF -12.9</td>
-        <td class="want">BUF -10.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">Wild Card</td>
-        <td>Los Angeles Rams</td>
-        <td class="want">vs</td>
-        <td>Detroit Lions</td>
-        <td>DET -0.2</td>
-        <td class="want">DET -3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">Wild Card</td>
-        <td>Miami Dolphins</td>
-        <td class="want">vs</td>
-        <td>Kansas City Chiefs</td>
-        <td>KC +6.2</td>
-        <td class="want">KC -4.5</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">Wild Card</td>
-        <td>Green Bay Packers</td>
-        <td class="want">vs</td>
-        <td>Dallas Cowboys</td>
-        <td>DAL +5.1</td>
-        <td class="want">DAL -7.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">Wild Card</td>
-        <td>Philadelphia Eagles</td>
-        <td class="want">vs</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td>TB -8.1</td>
-        <td class="want">TB +3.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">Divisional</td>
-        <td>Houston Texans</td>
-        <td class="want">vs</td>
-        <td>Baltimore Ravens</td>
-        <td>BAL +1.8</td>
-        <td class="want">BAL -10.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">Divisional</td>
-        <td>Green Bay Packers</td>
-        <td class="want">vs</td>
-        <td>San Francisco 49ers</td>
-        <td>SF -1.7</td>
-        <td class="want">SF -10.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">Divisional</td>
-        <td>Tampa Bay Buccaneers</td>
-        <td class="want">vs</td>
-        <td>Detroit Lions</td>
-        <td>DET -4.6</td>
-        <td class="want">DET -6.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">Divisional</td>
-        <td>Kansas City Chiefs</td>
-        <td class="want">vs</td>
-        <td>Buffalo Bills</td>
-        <td>BUF +0.4</td>
-        <td class="want">BUF -2.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">Championship</td>
-        <td>Kansas City Chiefs</td>
-        <td class="want">vs</td>
-        <td>Baltimore Ravens</td>
-        <td>BAL +1.3</td>
-        <td class="want">BAL -3.5</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="win">
-        <td class="want">Championship</td>
-        <td>Detroit Lions</td>
-        <td class="want">vs</td>
-        <td>San Francisco 49ers</td>
-        <td>SF -4.6</td>
-        <td class="want">SF -7.0</td>
-        <td>
-          <img class="win-lose" src="./check.png" alt="Yes" />
-        </td>
-      </tr>
-
-      <tr class="lose">
-        <td class="want">Super Bowl</td>
-        <td>Kansas City Chiefs</td>
-        <td class="want">vs</td>
-        <td>San Francisco 49ers</td>
-        <td>SF -6.1</td>
-        <td class="want">SF -1.0</td>
-        <td>
-          <img class="win-lose" src="./cross.png" alt="No" />
-        </td>
-      </tr>
-    </table>
-
-    <footer>Odds according to vegasinsider.com</footer>
+
+        <tr class="lose">
+          <td class="want">10</td>
+          <td>Indianapolis Colts</td>
+          <td class="want">vs</td>
+          <td>New England Patriots</td>
+          <td>NE -6.7</td>
+          <td class="want">NE +1.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">10</td>
+          <td>Cleveland Browns</td>
+          <td class="want">vs</td>
+          <td>Baltimore Ravens</td>
+          <td>BAL -11.7</td>
+          <td class="want">BAL -5.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">10</td>
+          <td>Green Bay Packers</td>
+          <td class="want">vs</td>
+          <td>Pittsburgh Steelers</td>
+          <td>PIT -5.3</td>
+          <td class="want">PIT -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">10</td>
+          <td>Houston Texans</td>
+          <td class="want">vs</td>
+          <td>Cincinnati Bengals</td>
+          <td>CIN +6.4</td>
+          <td class="want">CIN -5.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">10</td>
+          <td>New Orleans Saints</td>
+          <td class="want">vs</td>
+          <td>Minnesota Vikings</td>
+          <td>MIN +4.7</td>
+          <td class="want">MIN +3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">10</td>
+          <td>Tennessee Titans</td>
+          <td class="want">vs</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td>TB -7.4</td>
+          <td class="want">TB -2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">10</td>
+          <td>San Francisco 49ers</td>
+          <td class="want">vs</td>
+          <td>Jacksonville Jaguars</td>
+          <td>JAC -2.7</td>
+          <td class="want">JAC +3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">10</td>
+          <td>Atlanta Falcons</td>
+          <td class="want">vs</td>
+          <td>Arizona Cardinals</td>
+          <td>ARI -3.8</td>
+          <td class="want">ARI +2.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">10</td>
+          <td>Detroit Lions</td>
+          <td class="want">vs</td>
+          <td>Los Angeles Chargers</td>
+          <td>LAC -2.6</td>
+          <td class="want">LAC +2.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">10</td>
+          <td>New York Giants</td>
+          <td class="want">vs</td>
+          <td>Dallas Cowboys</td>
+          <td>DAL +0.5</td>
+          <td class="want">DAL -17.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">10</td>
+          <td>Washington Commanders</td>
+          <td class="want">vs</td>
+          <td>Seattle Seahawks</td>
+          <td>SEA -1.1</td>
+          <td class="want">SEA -6.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">10</td>
+          <td>New York Jets</td>
+          <td class="want">vs</td>
+          <td>Las Vegas Raiders</td>
+          <td>LV -4.9</td>
+          <td class="want">LV +1.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">10</td>
+          <td>Denver Broncos</td>
+          <td class="want">vs</td>
+          <td>Buffalo Bills</td>
+          <td>BUF -12.9</td>
+          <td class="want">BUF -7.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">11</td>
+          <td>Cincinnati Bengals</td>
+          <td class="want">vs</td>
+          <td>Baltimore Ravens</td>
+          <td>BAL -9.9</td>
+          <td class="want">BAL -4.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">11</td>
+          <td>Chicago Bears</td>
+          <td class="want">vs</td>
+          <td>Detroit Lions</td>
+          <td>DET -2.8</td>
+          <td class="want">DET -8.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">11</td>
+          <td>Arizona Cardinals</td>
+          <td class="want">vs</td>
+          <td>Houston Texans</td>
+          <td>HOU +1.0</td>
+          <td class="want">HOU -5.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">11</td>
+          <td>Dallas Cowboys</td>
+          <td class="want">vs</td>
+          <td>Carolina Panthers</td>
+          <td>CAR +4.7</td>
+          <td class="want">CAR +11.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">11</td>
+          <td>New York Giants</td>
+          <td class="want">vs</td>
+          <td>Washington Commanders</td>
+          <td>WAS -9.5</td>
+          <td class="want">WAS -7.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">11</td>
+          <td>Tennessee Titans</td>
+          <td class="want">vs</td>
+          <td>Jacksonville Jaguars</td>
+          <td>JAC -6.6</td>
+          <td class="want">JAC -6.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">11</td>
+          <td>Pittsburgh Steelers</td>
+          <td class="want">vs</td>
+          <td>Cleveland Browns</td>
+          <td>CLE -5.4</td>
+          <td class="want">CLE -2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">11</td>
+          <td>Las Vegas Raiders</td>
+          <td class="want">vs</td>
+          <td>Miami Dolphins</td>
+          <td>MIA -7.1</td>
+          <td class="want">MIA -14.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">11</td>
+          <td>Los Angeles Chargers</td>
+          <td class="want">vs</td>
+          <td>Green Bay Packers</td>
+          <td>GB +10.4</td>
+          <td class="want">GB +3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">11</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td class="want">vs</td>
+          <td>San Francisco 49ers</td>
+          <td>SF +3.7</td>
+          <td class="want">SF -13.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">11</td>
+          <td>New York Jets</td>
+          <td class="want">vs</td>
+          <td>Buffalo Bills</td>
+          <td>BUF -13.4</td>
+          <td class="want">BUF -7.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">11</td>
+          <td>Seattle Seahawks</td>
+          <td class="want">vs</td>
+          <td>Los Angeles Rams</td>
+          <td>LAR -9.8</td>
+          <td class="want">LAR -2.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">11</td>
+          <td>Minnesota Vikings</td>
+          <td class="want">vs</td>
+          <td>Denver Broncos</td>
+          <td>DEN +5.1</td>
+          <td class="want">DEN -2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">11</td>
+          <td>Philadelphia Eagles</td>
+          <td class="want">vs</td>
+          <td>Kansas City Chiefs</td>
+          <td>KC -2.7</td>
+          <td class="want">KC -2.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">12</td>
+          <td>Green Bay Packers</td>
+          <td class="want">vs</td>
+          <td>Detroit Lions</td>
+          <td>DET -12.4</td>
+          <td class="want">DET -8.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">12</td>
+          <td>Washington Commanders</td>
+          <td class="want">vs</td>
+          <td>Dallas Cowboys</td>
+          <td>DAL +5.6</td>
+          <td class="want">DAL -13.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">12</td>
+          <td>San Francisco 49ers</td>
+          <td class="want">vs</td>
+          <td>Seattle Seahawks</td>
+          <td>SEA +6.5</td>
+          <td class="want">SEA +7.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">12</td>
+          <td>Miami Dolphins</td>
+          <td class="want">vs</td>
+          <td>New York Jets</td>
+          <td>NYJ +8.2</td>
+          <td class="want">NYJ +9.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">12</td>
+          <td>Carolina Panthers</td>
+          <td class="want">vs</td>
+          <td>Tennessee Titans</td>
+          <td>TEN -8.1</td>
+          <td class="want">TEN -3.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">12</td>
+          <td>Jacksonville Jaguars</td>
+          <td class="want">vs</td>
+          <td>Houston Texans</td>
+          <td>HOU -9.5</td>
+          <td class="want">HOU +1.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">12</td>
+          <td>New Orleans Saints</td>
+          <td class="want">vs</td>
+          <td>Atlanta Falcons</td>
+          <td>ATL 0.0</td>
+          <td class="want">ATL +2.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">12</td>
+          <td>New England Patriots</td>
+          <td class="want">vs</td>
+          <td>New York Giants</td>
+          <td>NYG -9.5</td>
+          <td class="want">NYG +4.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">12</td>
+          <td>Pittsburgh Steelers</td>
+          <td class="want">vs</td>
+          <td>Cincinnati Bengals</td>
+          <td>CIN -6.3</td>
+          <td class="want">CIN +2.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">12</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td class="want">vs</td>
+          <td>Indianapolis Colts</td>
+          <td>IND -13.3</td>
+          <td class="want">IND -2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">12</td>
+          <td>Cleveland Browns</td>
+          <td class="want">vs</td>
+          <td>Denver Broncos</td>
+          <td>DEN -2.5</td>
+          <td class="want">DEN -2.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">12</td>
+          <td>Los Angeles Rams</td>
+          <td class="want">vs</td>
+          <td>Arizona Cardinals</td>
+          <td>ARI -9.0</td>
+          <td class="want">ARI +3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">12</td>
+          <td>Buffalo Bills</td>
+          <td class="want">vs</td>
+          <td>Philadelphia Eagles</td>
+          <td>PHI +0.3</td>
+          <td class="want">PHI -2.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">12</td>
+          <td>Kansas City Chiefs</td>
+          <td class="want">vs</td>
+          <td>Las Vegas Raiders</td>
+          <td>LV -7.9</td>
+          <td class="want">LV +9.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">12</td>
+          <td>Baltimore Ravens</td>
+          <td class="want">vs</td>
+          <td>Los Angeles Chargers</td>
+          <td>LAC +3.5</td>
+          <td class="want">LAC +3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">12</td>
+          <td>Chicago Bears</td>
+          <td class="want">vs</td>
+          <td>Minnesota Vikings</td>
+          <td>MIN -5.2</td>
+          <td class="want">MIN -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">13</td>
+          <td>Seattle Seahawks</td>
+          <td class="want">vs</td>
+          <td>Dallas Cowboys</td>
+          <td>DAL -7.2</td>
+          <td class="want">DAL -9.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">13</td>
+          <td>Atlanta Falcons</td>
+          <td class="want">vs</td>
+          <td>New York Jets</td>
+          <td>NYJ -5.2</td>
+          <td class="want">NYJ +2.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">13</td>
+          <td>Carolina Panthers</td>
+          <td class="want">vs</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td>TB -7.2</td>
+          <td class="want">TB -3.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">13</td>
+          <td>Indianapolis Colts</td>
+          <td class="want">vs</td>
+          <td>Tennessee Titans</td>
+          <td>TEN -8.9</td>
+          <td class="want">TEN +1.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">13</td>
+          <td>Arizona Cardinals</td>
+          <td class="want">vs</td>
+          <td>Pittsburgh Steelers</td>
+          <td>PIT +3.1</td>
+          <td class="want">PIT -6.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">13</td>
+          <td>Detroit Lions</td>
+          <td class="want">vs</td>
+          <td>New Orleans Saints</td>
+          <td>NO +7.9</td>
+          <td class="want">NO +4.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">13</td>
+          <td>Miami Dolphins</td>
+          <td class="want">vs</td>
+          <td>Washington Commanders</td>
+          <td>WAS -4.3</td>
+          <td class="want">WAS +8.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">13</td>
+          <td>Los Angeles Chargers</td>
+          <td class="want">vs</td>
+          <td>New England Patriots</td>
+          <td>NE -7.3</td>
+          <td class="want">NE +4.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">13</td>
+          <td>Denver Broncos</td>
+          <td class="want">vs</td>
+          <td>Houston Texans</td>
+          <td>HOU -8.6</td>
+          <td class="want">HOU -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">13</td>
+          <td>Cleveland Browns</td>
+          <td class="want">vs</td>
+          <td>Los Angeles Rams</td>
+          <td>LAR -1.5</td>
+          <td class="want">LAR -3.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">13</td>
+          <td>San Francisco 49ers</td>
+          <td class="want">vs</td>
+          <td>Philadelphia Eagles</td>
+          <td>PHI -1.8</td>
+          <td class="want">PHI +3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">13</td>
+          <td>Kansas City Chiefs</td>
+          <td class="want">vs</td>
+          <td>Green Bay Packers</td>
+          <td>GB +5.3</td>
+          <td class="want">GB +6.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">13</td>
+          <td>Cincinnati Bengals</td>
+          <td class="want">vs</td>
+          <td>Jacksonville Jaguars</td>
+          <td>JAC -6.7</td>
+          <td class="want">JAC -10.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">14</td>
+          <td>New England Patriots</td>
+          <td class="want">vs</td>
+          <td>Pittsburgh Steelers</td>
+          <td>PIT -9.7</td>
+          <td class="want">PIT -5.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">14</td>
+          <td>Carolina Panthers</td>
+          <td class="want">vs</td>
+          <td>New Orleans Saints</td>
+          <td>NO -9.9</td>
+          <td class="want">NO -5.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">14</td>
+          <td>Indianapolis Colts</td>
+          <td class="want">vs</td>
+          <td>Cincinnati Bengals</td>
+          <td>CIN -5.3</td>
+          <td class="want">CIN -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">14</td>
+          <td>Detroit Lions</td>
+          <td class="want">vs</td>
+          <td>Chicago Bears</td>
+          <td>CHI +11.3</td>
+          <td class="want">CHI +3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">14</td>
+          <td>Houston Texans</td>
+          <td class="want">vs</td>
+          <td>New York Jets</td>
+          <td>NYJ +3.9</td>
+          <td class="want">NYJ +3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">14</td>
+          <td>Jacksonville Jaguars</td>
+          <td class="want">vs</td>
+          <td>Cleveland Browns</td>
+          <td>CLE +6.1</td>
+          <td class="want">CLE -2.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">14</td>
+          <td>Los Angeles Rams</td>
+          <td class="want">vs</td>
+          <td>Baltimore Ravens</td>
+          <td>BAL -4.2</td>
+          <td class="want">BAL -7.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">14</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td class="want">vs</td>
+          <td>Atlanta Falcons</td>
+          <td>ATL -1.7</td>
+          <td class="want">ATL -1.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">14</td>
+          <td>Minnesota Vikings</td>
+          <td class="want">vs</td>
+          <td>Las Vegas Raiders</td>
+          <td>LV +2.6</td>
+          <td class="want">LV +3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">14</td>
+          <td>Seattle Seahawks</td>
+          <td class="want">vs</td>
+          <td>San Francisco 49ers</td>
+          <td>SF -5.2</td>
+          <td class="want">SF -15.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">14</td>
+          <td>Buffalo Bills</td>
+          <td class="want">vs</td>
+          <td>Kansas City Chiefs</td>
+          <td>KC +4.3</td>
+          <td class="want">KC -2.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">14</td>
+          <td>Denver Broncos</td>
+          <td class="want">vs</td>
+          <td>Los Angeles Chargers</td>
+          <td>LAC -12.2</td>
+          <td class="want">LAC -3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">14</td>
+          <td>Philadelphia Eagles</td>
+          <td class="want">vs</td>
+          <td>Dallas Cowboys</td>
+          <td>DAL -7.6</td>
+          <td class="want">DAL -3.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">14</td>
+          <td>Green Bay Packers</td>
+          <td class="want">vs</td>
+          <td>New York Giants</td>
+          <td>NYG -9.5</td>
+          <td class="want">NYG +5.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">14</td>
+          <td>Tennessee Titans</td>
+          <td class="want">vs</td>
+          <td>Miami Dolphins</td>
+          <td>MIA -12.2</td>
+          <td class="want">MIA -13.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">15</td>
+          <td>Los Angeles Chargers</td>
+          <td class="want">vs</td>
+          <td>Las Vegas Raiders</td>
+          <td>LV -3.8</td>
+          <td class="want">LV -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">15</td>
+          <td>Atlanta Falcons</td>
+          <td class="want">vs</td>
+          <td>Carolina Panthers</td>
+          <td>CAR -5.9</td>
+          <td class="want">CAR +2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">15</td>
+          <td>Chicago Bears</td>
+          <td class="want">vs</td>
+          <td>Cleveland Browns</td>
+          <td>CLE +1.5</td>
+          <td class="want">CLE -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">15</td>
+          <td>Denver Broncos</td>
+          <td class="want">vs</td>
+          <td>Detroit Lions</td>
+          <td>DET -12.9</td>
+          <td class="want">DET -5.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">15</td>
+          <td>Houston Texans</td>
+          <td class="want">vs</td>
+          <td>Tennessee Titans</td>
+          <td>TEN -4.5</td>
+          <td class="want">TEN -3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">15</td>
+          <td>Minnesota Vikings</td>
+          <td class="want">vs</td>
+          <td>Cincinnati Bengals</td>
+          <td>CIN +7.4</td>
+          <td class="want">CIN -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">15</td>
+          <td>New York Giants</td>
+          <td class="want">vs</td>
+          <td>New Orleans Saints</td>
+          <td>NO -3.0</td>
+          <td class="want">NO -6.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">15</td>
+          <td>New York Jets</td>
+          <td class="want">vs</td>
+          <td>Miami Dolphins</td>
+          <td>MIA -13.1</td>
+          <td class="want">MIA -7.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">15</td>
+          <td>Pittsburgh Steelers</td>
+          <td class="want">vs</td>
+          <td>Indianapolis Colts</td>
+          <td>IND -12.4</td>
+          <td class="want">IND -1.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">15</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td class="want">vs</td>
+          <td>Green Bay Packers</td>
+          <td>GB -12.1</td>
+          <td class="want">GB -4.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">15</td>
+          <td>San Francisco 49ers</td>
+          <td class="want">vs</td>
+          <td>Arizona Cardinals</td>
+          <td>ARI +6.3</td>
+          <td class="want">ARI +12.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">15</td>
+          <td>Washington Commanders</td>
+          <td class="want">vs</td>
+          <td>Los Angeles Rams</td>
+          <td>LAR -9.2</td>
+          <td class="want">LAR -7.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">15</td>
+          <td>Dallas Cowboys</td>
+          <td class="want">vs</td>
+          <td>Buffalo Bills</td>
+          <td>BUF +7.7</td>
+          <td class="want">BUF -2.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">15</td>
+          <td>Philadelphia Eagles</td>
+          <td class="want">vs</td>
+          <td>Seattle Seahawks</td>
+          <td>SEA +1.4</td>
+          <td class="want">SEA +5.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">15</td>
+          <td>Baltimore Ravens</td>
+          <td class="want">vs</td>
+          <td>Jacksonville Jaguars</td>
+          <td>JAC -2.0</td>
+          <td class="want">JAC +4.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">15</td>
+          <td>Kansas City Chiefs</td>
+          <td class="want">vs</td>
+          <td>New England Patriots</td>
+          <td>NE +3.6</td>
+          <td class="want">NE +10.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>New Orleans Saints</td>
+          <td class="want">vs</td>
+          <td>Los Angeles Rams</td>
+          <td>LAR -4.2</td>
+          <td class="want">LAR -4.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Cincinnati Bengals</td>
+          <td class="want">vs</td>
+          <td>Pittsburgh Steelers</td>
+          <td>PIT -10.5</td>
+          <td class="want">PIT +3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Buffalo Bills</td>
+          <td class="want">vs</td>
+          <td>Los Angeles Chargers</td>
+          <td>LAC -2.8</td>
+          <td class="want">LAC +12.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">16</td>
+          <td>Cleveland Browns</td>
+          <td class="want">vs</td>
+          <td>Houston Texans</td>
+          <td>HOU -2.2</td>
+          <td class="want">HOU +3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Indianapolis Colts</td>
+          <td class="want">vs</td>
+          <td>Atlanta Falcons</td>
+          <td>ATL -2.2</td>
+          <td class="want">ATL -2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Detroit Lions</td>
+          <td class="want">vs</td>
+          <td>Minnesota Vikings</td>
+          <td>MIN +3.3</td>
+          <td class="want">MIN +2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Green Bay Packers</td>
+          <td class="want">vs</td>
+          <td>Carolina Panthers</td>
+          <td>CAR -5.9</td>
+          <td class="want">CAR +3.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Seattle Seahawks</td>
+          <td class="want">vs</td>
+          <td>Tennessee Titans</td>
+          <td>TEN -11.1</td>
+          <td class="want">TEN +3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Washington Commanders</td>
+          <td class="want">vs</td>
+          <td>New York Jets</td>
+          <td>NYJ +6.6</td>
+          <td class="want">NYJ -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Jacksonville Jaguars</td>
+          <td class="want">vs</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td>TB -9.1</td>
+          <td class="want">TB +2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Arizona Cardinals</td>
+          <td class="want">vs</td>
+          <td>Chicago Bears</td>
+          <td>CHI -11.0</td>
+          <td class="want">CHI -4.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Dallas Cowboys</td>
+          <td class="want">vs</td>
+          <td>Miami Dolphins</td>
+          <td>MIA -11.9</td>
+          <td class="want">MIA -1.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>New England Patriots</td>
+          <td class="want">vs</td>
+          <td>Denver Broncos</td>
+          <td>DEN -6.6</td>
+          <td class="want">DEN -7.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">16</td>
+          <td>Las Vegas Raiders</td>
+          <td class="want">vs</td>
+          <td>Kansas City Chiefs</td>
+          <td>KC -11.1</td>
+          <td class="want">KC -11.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>New York Giants</td>
+          <td class="want">vs</td>
+          <td>Philadelphia Eagles</td>
+          <td>PHI -12.8</td>
+          <td class="want">PHI -14.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">16</td>
+          <td>Baltimore Ravens</td>
+          <td class="want">vs</td>
+          <td>San Francisco 49ers</td>
+          <td>SF -3.3</td>
+          <td class="want">SF -6.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">17</td>
+          <td>New York Jets</td>
+          <td class="want">vs</td>
+          <td>Cleveland Browns</td>
+          <td>CLE -12.2</td>
+          <td class="want">CLE -7.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">17</td>
+          <td>Detroit Lions</td>
+          <td class="want">vs</td>
+          <td>Dallas Cowboys</td>
+          <td>DAL -3.3</td>
+          <td class="want">DAL -4.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">17</td>
+          <td>Atlanta Falcons</td>
+          <td class="want">vs</td>
+          <td>Chicago Bears</td>
+          <td>CHI -1.3</td>
+          <td class="want">CHI -3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">17</td>
+          <td>Carolina Panthers</td>
+          <td class="want">vs</td>
+          <td>Jacksonville Jaguars</td>
+          <td>JAC -9.9</td>
+          <td class="want">JAC -7.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">17</td>
+          <td>Arizona Cardinals</td>
+          <td class="want">vs</td>
+          <td>Philadelphia Eagles</td>
+          <td>PHI -8.1</td>
+          <td class="want">PHI -10.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">17</td>
+          <td>Miami Dolphins</td>
+          <td class="want">vs</td>
+          <td>Baltimore Ravens</td>
+          <td>BAL +5.2</td>
+          <td class="want">BAL -4.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">17</td>
+          <td>New Orleans Saints</td>
+          <td class="want">vs</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td>TB -3.8</td>
+          <td class="want">TB -3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">17</td>
+          <td>New England Patriots</td>
+          <td class="want">vs</td>
+          <td>Buffalo Bills</td>
+          <td>BUF -13.6</td>
+          <td class="want">BUF -15.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">17</td>
+          <td>Tennessee Titans</td>
+          <td class="want">vs</td>
+          <td>Houston Texans</td>
+          <td>HOU -10.4</td>
+          <td class="want">HOU -3.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">17</td>
+          <td>Las Vegas Raiders</td>
+          <td class="want">vs</td>
+          <td>Indianapolis Colts</td>
+          <td>IND -13.3</td>
+          <td class="want">IND -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">17</td>
+          <td>Los Angeles Rams</td>
+          <td class="want">vs</td>
+          <td>New York Giants</td>
+          <td>NYG -4.9</td>
+          <td class="want">NYG +6.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">17</td>
+          <td>San Francisco 49ers</td>
+          <td class="want">vs</td>
+          <td>Washington Commanders</td>
+          <td>WAS +2.0</td>
+          <td class="want">WAS +13.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">17</td>
+          <td>Pittsburgh Steelers</td>
+          <td class="want">vs</td>
+          <td>Seattle Seahawks</td>
+          <td>SEA -9.9</td>
+          <td class="want">SEA -3.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">17</td>
+          <td>Cincinnati Bengals</td>
+          <td class="want">vs</td>
+          <td>Kansas City Chiefs</td>
+          <td>KC -3.0</td>
+          <td class="want">KC -7.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">17</td>
+          <td>Los Angeles Chargers</td>
+          <td class="want">vs</td>
+          <td>Denver Broncos</td>
+          <td>DEN -5.8</td>
+          <td class="want">DEN -5.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">17</td>
+          <td>Green Bay Packers</td>
+          <td class="want">vs</td>
+          <td>Minnesota Vikings</td>
+          <td>MIN -2.2</td>
+          <td class="want">MIN -2.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">18</td>
+          <td>Atlanta Falcons</td>
+          <td class="want">vs</td>
+          <td>New Orleans Saints</td>
+          <td>NO -3.0</td>
+          <td class="want">NO -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">18</td>
+          <td>Buffalo Bills</td>
+          <td class="want">vs</td>
+          <td>Miami Dolphins</td>
+          <td>MIA +0.8</td>
+          <td class="want">MIA +2.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">18</td>
+          <td>Chicago Bears</td>
+          <td class="want">vs</td>
+          <td>Green Bay Packers</td>
+          <td>GB -4.4</td>
+          <td class="want">GB -2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">18</td>
+          <td>Cleveland Browns</td>
+          <td class="want">vs</td>
+          <td>Cincinnati Bengals</td>
+          <td>CIN -1.6</td>
+          <td class="want">CIN -7.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">18</td>
+          <td>Dallas Cowboys</td>
+          <td class="want">vs</td>
+          <td>Washington Commanders</td>
+          <td>WAS +1.6</td>
+          <td class="want">WAS +13.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">18</td>
+          <td>Denver Broncos</td>
+          <td class="want">vs</td>
+          <td>Las Vegas Raiders</td>
+          <td>LV -10.2</td>
+          <td class="want">LV -3.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">18</td>
+          <td>Houston Texans</td>
+          <td class="want">vs</td>
+          <td>Indianapolis Colts</td>
+          <td>IND +7.2</td>
+          <td class="want">IND +1.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">18</td>
+          <td>Jacksonville Jaguars</td>
+          <td class="want">vs</td>
+          <td>Tennessee Titans</td>
+          <td>TEN -9.0</td>
+          <td class="want">TEN +3.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">18</td>
+          <td>Kansas City Chiefs</td>
+          <td class="want">vs</td>
+          <td>Los Angeles Chargers</td>
+          <td>LAC -4.3</td>
+          <td class="want">LAC -3.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">18</td>
+          <td>Minnesota Vikings</td>
+          <td class="want">vs</td>
+          <td>Detroit Lions</td>
+          <td>DET -9.5</td>
+          <td class="want">DET -3.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">18</td>
+          <td>New York Jets</td>
+          <td class="want">vs</td>
+          <td>New England Patriots</td>
+          <td>NE -10.5</td>
+          <td class="want">NE -2.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">18</td>
+          <td>Philadelphia Eagles</td>
+          <td class="want">vs</td>
+          <td>New York Giants</td>
+          <td>NYG -3.5</td>
+          <td class="want">NYG +5.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">18</td>
+          <td>Pittsburgh Steelers</td>
+          <td class="want">vs</td>
+          <td>Baltimore Ravens</td>
+          <td>BAL -14.0</td>
+          <td class="want">BAL +3.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">18</td>
+          <td>Los Angeles Rams</td>
+          <td class="want">vs</td>
+          <td>San Francisco 49ers</td>
+          <td>SF -6.2</td>
+          <td class="want">SF -5.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">18</td>
+          <td>Seattle Seahawks</td>
+          <td class="want">vs</td>
+          <td>Arizona Cardinals</td>
+          <td>ARI -2.1</td>
+          <td class="want">ARI +3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">18</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td class="want">vs</td>
+          <td>Carolina Panthers</td>
+          <td>CAR -7.1</td>
+          <td class="want">CAR +4.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">Wild Card</td>
+          <td>Cleveland Browns</td>
+          <td class="want">vs</td>
+          <td>Houston Texans</td>
+          <td>HOU -2.2</td>
+          <td class="want">HOU +2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">Wild Card</td>
+          <td>Pittsburgh Steelers</td>
+          <td class="want">vs</td>
+          <td>Buffalo Bills</td>
+          <td>BUF -12.9</td>
+          <td class="want">BUF -10.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">Wild Card</td>
+          <td>Los Angeles Rams</td>
+          <td class="want">vs</td>
+          <td>Detroit Lions</td>
+          <td>DET -0.2</td>
+          <td class="want">DET -3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">Wild Card</td>
+          <td>Miami Dolphins</td>
+          <td class="want">vs</td>
+          <td>Kansas City Chiefs</td>
+          <td>KC +6.2</td>
+          <td class="want">KC -4.5</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">Wild Card</td>
+          <td>Green Bay Packers</td>
+          <td class="want">vs</td>
+          <td>Dallas Cowboys</td>
+          <td>DAL +5.1</td>
+          <td class="want">DAL -7.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">Wild Card</td>
+          <td>Philadelphia Eagles</td>
+          <td class="want">vs</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td>TB -8.1</td>
+          <td class="want">TB +3.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">Divisional</td>
+          <td>Houston Texans</td>
+          <td class="want">vs</td>
+          <td>Baltimore Ravens</td>
+          <td>BAL +1.8</td>
+          <td class="want">BAL -10.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">Divisional</td>
+          <td>Green Bay Packers</td>
+          <td class="want">vs</td>
+          <td>San Francisco 49ers</td>
+          <td>SF -1.7</td>
+          <td class="want">SF -10.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">Divisional</td>
+          <td>Tampa Bay Buccaneers</td>
+          <td class="want">vs</td>
+          <td>Detroit Lions</td>
+          <td>DET -4.6</td>
+          <td class="want">DET -6.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">Divisional</td>
+          <td>Kansas City Chiefs</td>
+          <td class="want">vs</td>
+          <td>Buffalo Bills</td>
+          <td>BUF +0.4</td>
+          <td class="want">BUF -2.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">Championship</td>
+          <td>Kansas City Chiefs</td>
+          <td class="want">vs</td>
+          <td>Baltimore Ravens</td>
+          <td>BAL +1.3</td>
+          <td class="want">BAL -3.5</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="win">
+          <td class="want">Championship</td>
+          <td>Detroit Lions</td>
+          <td class="want">vs</td>
+          <td>San Francisco 49ers</td>
+          <td>SF -4.6</td>
+          <td class="want">SF -7.0</td>
+          <td>
+            <img class="win-lose" src="./check.png" alt="Yes" />
+          </td>
+        </tr>
+
+        <tr class="lose">
+          <td class="want">Super Bowl</td>
+          <td>Kansas City Chiefs</td>
+          <td class="want">vs</td>
+          <td>San Francisco 49ers</td>
+          <td>SF -6.1</td>
+          <td class="want">SF -1.0</td>
+          <td>
+            <img class="win-lose" src="./cross.png" alt="No" />
+          </td>
+        </tr>
+      </table>
+    </div>
   </body>
+  <div class="footerContainer">
+    <footer class="footer" id="disclaimer">© Kushal Patel 2025</footer>
+  </div>
 </html>
