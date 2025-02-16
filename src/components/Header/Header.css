@@ -84,6 +84,28 @@ span.gentle-hover-shake:hover {
   width: 300px;
   border-radius: 3%;
 }
+
+.blockM {
+  height:50px;
+  width: auto;
+  margin-right: 15px;
+    margin-bottom: 20px;
+}
+
+.amzn {
+  height: 65px;
+  width: auto;
+  margin-bottom: 25px;
+}
+.bar {
+  font-size: 60px;
+  font-weight: 100;
+}
+
+.blockM,
+.amzn {
+  vertical-align: middle;
+}
 @media screen and (max-width: 767px) {
   .header {
     flex-direction: column;
