@@ -317,6 +317,17 @@ header {
   .footer {
     width:90%;
   }
+  .team-row {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  #home-team, #away-team {
+    text-align: center;
+  }
 }
 .video-container {
   padding-top: 140px;
