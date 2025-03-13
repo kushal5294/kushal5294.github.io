@@ -15,13 +15,13 @@ function Header() {
         <p>
           CS @ <span className="highlight">U of M</span>
         </p>
-        {/* <p>
+        <p>
           SDE Intern @ <span className="highlight">Amazon</span>{" "}
-        </p> */}
+        </p>
         <div>
           <img className="blockM" src={Michigan}></img>
-          {/* <span className="highlight bar">|</span>
-          <img className="amzn" src={Amazon}></img> */}
+          <span className="highlight bar">|</span>
+          <img className="amzn" src={Amazon}></img>
         </div>
       </div>
       <img src={profile} alt="headshot" className="profile-pic" />
