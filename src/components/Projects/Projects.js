@@ -5,6 +5,7 @@ import Football from "../../assets/football.png";
 import Search_Engine from "../../assets/search_engine.png";
 import Portfolio from "../../assets/portfolio.png";
 import Alt from "../../assets/accessibility.png";
+import DS from "../../assets/distributed-database.png";
 import BallotBank from "../../assets/BallotBank.png";
 import Basketball from "../../assets/basketball.png";
 import Instagram from "../../assets/instagram.png";
@@ -83,22 +84,40 @@ const projects = [
     link4_button: "",
   },
   {
-    title: "Ballot Bank",
-    concise: "iOS crypto wallet and blockchain voting app",
+    title: "KVStore",
+    concise:
+      "Fault-tolerant & scalable key-value store with Paxos-based consensus and sharding",
     description:
-      "iOS application featuring:<ul><li>Live valuation of top 100 cryptocurrencies</li><li>Log crypto wallet to view live portfolio worth and graphs</li><li>Fully decentralized voting platform via mock blockchain</li></ul>",
-    tags: ["Swift", "SwiftUI", "Blockchain", "MongoDB", "iOS", "Crypto"],
-    icon: BallotBank,
-    icon_size: "80px",
-    link1: "https://github.com/kushal5294/Ballot_Bank",
-    link1_button: "Source Code",
-    link2: "/ballot_bank.html",
-    link2_button: "Video Demo",
+      "<ul><li>Multi-instance Paxos for lineraizable consistency</li><li>Horizontally scalable via sharding with dynamic rebalancing</li><li>Fault-tolerant under replica crashes and network drops</li></ul>",
+    tags: ["Go", "Paxos", "Fault-Tolerant", "Sharding", "RPC"],
+    icon: DS,
+    icon_size: "100px",
+    link1: "",
+    link1_button: "",
+    link2: "",
+    link2_button: "",
     link3: "",
     link3_button: "",
     link4: "",
     link4_button: "",
   },
+  // {
+  //   title: "Ballot Bank",
+  //   concise: "iOS crypto wallet and blockchain voting app",
+  //   description:
+  //     "iOS application featuring:<ul><li>Live valuation of top 100 cryptocurrencies</li><li>Log crypto wallet to view live portfolio worth and graphs</li><li>Fully decentralized voting platform via mock blockchain</li></ul>",
+  //   tags: ["Swift", "SwiftUI", "Blockchain", "MongoDB", "iOS", "Crypto"],
+  //   icon: BallotBank,
+  //   icon_size: "80px",
+  //   link1: "https://github.com/kushal5294/Ballot_Bank",
+  //   link1_button: "Source Code",
+  //   link2: "/ballot_bank.html",
+  //   link2_button: "Video Demo",
+  //   link3: "",
+  //   link3_button: "",
+  //   link4: "",
+  //   link4_button: "",
+  // },
   // {
   //   title: "March Madness Bracket Predictor",
   //   concise: "ML model that finished in the 84th percentile in 2023",
