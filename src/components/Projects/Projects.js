@@ -84,12 +84,12 @@ const projects = [
     link4_button: "",
   },
   {
-    title: "KVStore",
+    title: "KV Database",
     concise:
       "Fault-tolerant & scalable key-value store with Paxos-based consensus and sharding",
     description:
-      "<ul><li>Multi-instance Paxos for lineraizable consistency</li><li>Horizontally scalable via sharding with dynamic rebalancing</li><li>Fault-tolerant under replica crashes and network drops</li></ul>",
-    tags: ["Go", "Paxos", "Fault-Tolerant", "Sharding", "RPC"],
+      "<ul><li>Fault-tolerant under replica crashes and network drops</li><li>Multi-instance Paxos for linearizable consistency</li><li>Horizontally scalable via sharding with dynamic rebalancing</li></ul>",
+    tags: ["Go", "Paxos", "Sharding", "Distributed Systems", "RPC"],
     icon: DS,
     icon_size: "100px",
     link1: "",
