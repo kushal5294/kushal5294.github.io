@@ -7,6 +7,25 @@
     <title>NFL Spread Results</title>
     <link rel="stylesheet" type="text/css" href="/css/style.css" />
     <script>
+      const initialYear = 2025;
+      let year = initialYear;
+
+      function changeYear() {
+        if (year === 2024) {
+          year = initialYear;
+        } else {
+          year--;
+        }
+        loadSpreadData(year);
+        document.getElementById(
+          "simulator-title"
+        ).textContent = `🏈 ${year} Matchup Simulator 🏈`;
+        document.getElementById("home-team").value = "";
+        document.getElementById("away-team").value = "";
+        document.getElementById("spread-result").textContent = "";
+        document.getElementById("logos").style.display = "none";
+      }
+
       function toggleTable() {
         const picks = document.getElementById("picks");
         const disclaimer = document.getElementById("disclaimer");
@@ -69,9 +88,9 @@
 
       let spreadData = {};
 
-      async function loadSpreadData() {
+      async function loadSpreadData(year) {
         try {
-          const response = await fetch("2024_all_spreads.json");
+          const response = await fetch(`${year}_all_spreads.json`);
           spreadData = await response.json();
         } catch (error) {
           console.error("Error loading spread data:", error);
@@ -130,8 +149,11 @@
       }
 
       window.onload = async () => {
+        document.getElementById(
+          "simulator-title"
+        ).textContent = `🏈 ${year} Matchup Simulator 🏈`;
         populateDropdowns();
-        await loadSpreadData();
+        await loadSpreadData(year);
       };
     </script>
   </head>
@@ -171,12 +193,13 @@
           <button id="toggle-button" class="btn" onclick="toggleTable()">
             Show Picks
           </button>
+          <button class="btn" onclick="changeYear()">Change Year</button>
         </div>
       </div>
     </div>
 
     <div class="matchups">
-      <h1>🏈 2024 Matchup Simulator 🏈</h1>
+      <h1 id="simulator-title">🏈 2024 Matchup Simulator 🏈</h1>
       <div class="team-row">
         <div class="team">
           <label for="away-team">Away Team</label>
