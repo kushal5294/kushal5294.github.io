@@ -20,6 +20,10 @@
         document.getElementById(
           "simulator-title"
         ).textContent = `🏈 ${year} Matchup Simulator 🏈`;
+        document.getElementById("home-team").value = "";
+        document.getElementById("away-team").value = "";
+        document.getElementById("spread-result").textContent = "";
+        document.getElementById("logos").style.display = "none";
       }
 
       function toggleTable() {
