@@ -92,8 +92,8 @@ span.gentle-hover-shake:hover {
     margin-bottom: 20px;
 }
 
-.amzn {
-  height: 65px;
+.company {
+  height: 120px;
   width: auto;
   margin-bottom: 25px;
 }
@@ -103,7 +103,7 @@ span.gentle-hover-shake:hover {
 }
 
 .blockM,
-.amzn {
+.company {
   vertical-align: middle;
 }
 @media screen and (max-width: 767px) {

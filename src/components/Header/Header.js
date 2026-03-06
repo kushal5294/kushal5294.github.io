@@ -1,8 +1,9 @@
 import React from "react";
 import "./Header.css";
 import profile from "../../assets/headshot.jpeg";
-import Michigan from "../../assets/mich.png";
-// import Amazon from "../../assets/amzn.png";
+import Michigan from "../../assets/mich.svg";
+import Uber from "../../assets/uber.svg";
+import Amazon from "../../assets/amzn.svg";
 
 function Header() {
   return (
@@ -15,13 +16,22 @@ function Header() {
         <p>
           CS @ <span className="highlight">U of M</span>
         </p>
+        <p>
+          SWE @ <span className="highlight">Uber</span>{" "}
+        </p>
         {/* <p>
-          SDE Intern @ <span className="highlight">Amazon</span>{" "}
+          Prev @ <span className="highlight">Amazon</span>{" "}
         </p> */}
         <div>
           <img className="blockM" src={Michigan}></img>
-          {/* <span className="highlight bar">|</span>
-          <img className="amzn" src={Amazon}></img> */}
+          <span className="highlight bar">|</span>
+          <img className="company" src={Uber}></img>
+          <span className="highlight bar">|</span>
+          <img
+            className="company"
+            src={Amazon}
+            style={{ height: "70px" }}
+          ></img>
         </div>
       </div>
       <img src={profile} alt="headshot" className="profile-pic" />
