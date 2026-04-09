@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.8bc2364d.css",
-    "main.js": "/static/js/main.c9ea6d24.js",
+    "main.css": "/static/css/main.5315223e.css",
+    "main.js": "/static/js/main.da131265.js",
     "static/js/453.1407b060.chunk.js": "/static/js/453.1407b060.chunk.js",
     "static/media/instagram.png": "/static/media/instagram.80e598d8df0c0a94d580.png",
     "static/media/headshot.jpeg": "/static/media/headshot.d2bcaac9117f87212f0c.jpeg",
@@ -14,15 +14,14 @@
     "static/media/distributed-database.png": "/static/media/distributed-database.cc5567b5a2e883454f90.png",
     "static/media/portfolio.png": "/static/media/portfolio.49b0f92ae9bbba8ce2bf.png",
     "static/media/uber.svg": "/static/media/uber.02c6e9915f286fc7ca3083b074ab0c56.svg",
-    "static/media/amzn.svg": "/static/media/amzn.1527d9a47d245851f4828bc7cd16cf87.svg",
     "index.html": "/index.html",
     "static/media/mich.svg": "/static/media/mich.d8a292c70d21e07724308a2bd7248fbe.svg",
-    "main.8bc2364d.css.map": "/static/css/main.8bc2364d.css.map",
-    "main.c9ea6d24.js.map": "/static/js/main.c9ea6d24.js.map",
+    "main.5315223e.css.map": "/static/css/main.5315223e.css.map",
+    "main.da131265.js.map": "/static/js/main.da131265.js.map",
     "453.1407b060.chunk.js.map": "/static/js/453.1407b060.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.8bc2364d.css",
-    "static/js/main.c9ea6d24.js"
+    "static/css/main.5315223e.css",
+    "static/js/main.da131265.js"
   ]
 }
