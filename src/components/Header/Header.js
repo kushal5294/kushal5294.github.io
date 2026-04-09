@@ -3,7 +3,6 @@ import "./Header.css";
 import profile from "../../assets/headshot.jpeg";
 import Michigan from "../../assets/mich.svg";
 import Uber from "../../assets/uber.svg";
-import Amazon from "../../assets/amzn.svg";
 
 function Header() {
   return (
@@ -26,12 +25,6 @@ function Header() {
           <img className="blockM" src={Michigan}></img>
           <span className="highlight bar">|</span>
           <img className="company" src={Uber}></img>
-          <span className="highlight bar">|</span>
-          <img
-            className="company"
-            src={Amazon}
-            style={{ height: "70px" }}
-          ></img>
         </div>
       </div>
       <img src={profile} alt="headshot" className="profile-pic" />
